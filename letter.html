@@ -110,6 +110,20 @@
       transform: translateX(-50%);
     }
     .topbar { position: relative; z-index: 3; }
+    .brand-navigation { display: flex; align-items: center; gap: 12px; }
+    .back-home {
+      display: inline-flex;
+      min-height: 36px;
+      align-items: center;
+      gap: 5px;
+      color: rgba(255, 255, 255, .88);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .back-home:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+    .back-home-arrow { font-size: 18px; line-height: 1; }
     .hero-panel {
       position: relative;
       z-index: 1;
@@ -796,7 +810,7 @@
       .hero-panel { margin-right: -14px; margin-left: -14px; padding-right: 14px; padding-left: 14px; border-radius: 0 0 13px 13px; }
       .page-shell::before { inset: 5px; border-radius: 13px; }
       .page-shell::after { top: -7px; }
-      .topbar { height: 68px; }
+      .topbar { height: auto; min-height: 68px; flex-wrap: wrap; gap: 8px; padding: 9px 0; }
       .top-note { font-size: 11px; }
       .header-tools { gap: 8px; }
       .font-select { width: 86px; height: 33px; padding: 0 5px; font-size: 10px; }
@@ -875,9 +889,12 @@
     </svg>
     <header class="hero-panel">
       <div class="topbar">
-        <div class="brand">
-          <span class="brand-mark" aria-hidden="true"><span id="brand-fallback">✳</span><img class="brand-logo" id="brand-logo" alt=""></span>
-          <span class="brand-name">PROJECTEDU</span>
+        <div class="brand-navigation">
+          <a class="back-home" href="index.html"><span class="back-home-arrow" aria-hidden="true">←</span> Home</a>
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true"><span id="brand-fallback">✳</span><img class="brand-logo" id="brand-logo" alt=""></span>
+            <span class="brand-name">PROJECTEDU</span>
+          </div>
         </div>
         <div class="header-tools">
           <span class="top-note">A little space for what you want to say.</span>

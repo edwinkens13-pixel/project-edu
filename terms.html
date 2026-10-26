@@ -34,6 +34,7 @@
       box-shadow: 0 18px 60px rgba(49, 27, 81, .13);
     }
     .brand {
+      display: inline-block;
       color: #554078;
       font-size: 12px;
       font-weight: 800;
@@ -41,6 +42,17 @@
       text-decoration: none;
       text-transform: uppercase;
     }
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+      color: #5d4887;
+      font-size: 13px;
+      font-weight: 700;
+      text-underline-offset: 3px;
+    }
+    .back-home-arrow { font-size: 19px; line-height: 1; }
     h1, h2 { font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif; }
     h1 { margin: 20px 0 8px; color: #382752; font-size: clamp(34px, 7vw, 48px); font-weight: 500; }
     .updated { margin: 0 0 28px; color: #77717e; font-size: 13px; }
@@ -70,6 +82,7 @@
 </head>
 <body>
   <main class="page">
+    <a class="back-home" href="index.html"><span class="back-home-arrow" aria-hidden="true">←</span> Back to home</a>
     <a class="brand" href="index.html">PROJECTEDU</a>
     <h1>Terms &amp; Conditions</h1>
     <p class="updated">Effective date: October 24, 2026</p>
