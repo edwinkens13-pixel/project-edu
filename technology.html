@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f5ef">
+  <meta name="description" content="Explore the frontend, backend, database, Git, security, and deployment ideas behind PROJECTEDU.">
+  <title>PROJECTEDU Tech Stack — A little learning studio</title>
+  <style>
+    :root { color-scheme: light; font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif; color: #302b38; background: #f7f5ef; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: radial-gradient(ellipse at 8% 0%,rgba(223,231,216,.66),transparent 28rem),radial-gradient(ellipse at 92% 88%,rgba(220,208,238,.56),transparent 31rem),#f7f5ef; }
+    a { color: #5b4780; }
+    .topbar { display: flex; min-height: 72px; align-items: center; justify-content: space-between; gap: 14px; width: min(1120px,calc(100% - 36px)); margin: 0 auto; border-bottom: 1px solid #e6e0eb; }
+    .brand { color: #49345f; font-size: 13px; font-weight: 850; letter-spacing: .12em; text-decoration: none; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 17px; font-size: 12px; }
+    .nav-links a { text-underline-offset: 3px; }
+    main { width: min(1120px,calc(100% - 36px)); margin: 0 auto; padding-bottom: 60px; }
+    .hero { position: relative; margin: 30px 0 26px; overflow: hidden; padding: clamp(27px,6vw,56px); border: 1px solid #4a365f; border-radius: 22px; background: radial-gradient(ellipse at 100% 0%,rgba(119,89,156,.4),transparent 36%),linear-gradient(125deg,#17131e,#2c2039 65%,#39263b); color: #fff; box-shadow: 0 20px 55px rgba(49,27,81,.16); }
+    .hero::after { position: absolute; top: -110px; right: -70px; width: 290px; height: 290px; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; box-shadow: 0 0 0 28px rgba(255,255,255,.025),0 0 0 58px rgba(255,255,255,.018); content: ""; }
+    .eyebrow { color: #dac7ef; font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1,h2,h3 { font-family: "Palatino Linotype","Book Antiqua",Georgia,serif; font-weight: 500; }
+    h1 { position: relative; z-index: 1; max-width: 740px; margin: 14px 0 11px; font-size: clamp(39px,7vw,66px); letter-spacing: -.04em; line-height: 1.03; }
+    .hero p { position: relative; z-index: 1; max-width: 680px; margin: 0; color: rgba(255,255,255,.76); font-size: 14px; line-height: 1.8; }
+    .hero-actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 10px; margin-top: 23px; }
+    .button { display: inline-flex; min-height: 41px; align-items: center; justify-content: center; padding: 0 15px; border: 1px solid #ddd5e8; border-radius: 9px; background: #fff; color: #49375f; font-size: 11px; font-weight: 750; text-decoration: none; cursor: pointer; }
+    .button-primary { border-color: #bba7d2; background: linear-gradient(135deg,#b49bd1,#8c70ae); color: #fff; }
+    .button:hover { transform: translateY(-1px); }
+    .reality-note { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; margin: 17px 0 30px; padding: 16px 18px; border: 1px solid #e3d9ec; border-radius: 13px; background: rgba(255,255,255,.75); }
+    .note-icon { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 10px; background: #f1ebf8; }
+    .reality-note strong { display: block; margin: 1px 0 4px; color: #49365f; font-size: 12px; }
+    .reality-note p { margin: 0; color: #6e6873; font-size: 11px; line-height: 1.7; }
+    .section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px; margin: 34px 0 15px; }
+    .section-head h2 { margin: 0; color: #39294c; font-size: 28px; }
+    .section-head p { max-width: 560px; margin: 0; color: #77717b; font-size: 11px; line-height: 1.6; }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 0 16px; }
+    .filter-button { min-height: 34px; padding: 0 12px; border: 1px solid #e1dce5; border-radius: 999px; background: #fff; color: #605a66; font-size: 10px; font-weight: 700; cursor: pointer; }
+    .filter-button[aria-pressed="true"] { border-color: #776091; background: #eee8f5; color: #48345f; }
+    .stack-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 13px; }
+    .stack-card { min-width: 0; padding: 18px; border: 1px solid #e8e3e9; border-radius: 15px; background: rgba(255,255,255,.88); box-shadow: 0 9px 25px rgba(54,41,72,.045); transition: transform .18s ease,box-shadow .18s ease; }
+    .stack-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(54,41,72,.09); }
+    .stack-card[hidden] { display: none; }
+    .card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .card-icon { display: grid; width: 37px; height: 37px; place-items: center; border-radius: 12px; background: #f0ebf6; font-size: 18px; }
+    .tag { padding: 5px 8px; border-radius: 99px; background: #f3f0f4; color: #716a75; font-size: 8px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+    .tag-live { background: #e8f2eb; color: #3d7050; }
+    .stack-card h3 { margin: 13px 0 6px; color: #49365f; font-size: 20px; }
+    .stack-card p { margin: 0; color: #706b75; font-size: 11px; line-height: 1.65; }
+    .stack-card .role { margin-bottom: 8px; color: #413a48; font-size: 10px; font-weight: 750; }
+    .stack-card details { margin-top: 12px; border-top: 1px solid #eeeaf0; padding-top: 10px; }
+    .stack-card summary { color: #67537d; font-size: 10px; font-weight: 750; cursor: pointer; }
+    .stack-card details p { padding-top: 7px; }
+    code, pre { font-family: Consolas,"Courier New",monospace; }
+    .flow { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px; margin-top: 16px; }
+    .flow-step { position: relative; min-height: 98px; padding: 13px; border: 1px solid #e7e1eb; border-radius: 12px; background: #fff; text-align: center; }
+    .flow-step:not(:last-child)::after { position: absolute; top: 28px; right: -13px; z-index: 1; color: #9b88ae; content: "→"; font-size: 14px; font-weight: 800; }
+    .flow-step span { display: block; margin-bottom: 7px; font-size: 17px; }
+    .flow-step strong { display: block; color: #49365f; font-size: 10px; }
+    .flow-step small { display: block; margin-top: 4px; color: #77717b; font-size: 9px; line-height: 1.45; }
+    .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 15px; }
+    .demo-panel { min-width: 0; padding: 18px; border: 1px solid #e7e1eb; border-radius: 14px; background: #fff; }
+    .demo-panel h3 { margin: 0 0 6px; color: #49365f; font-size: 19px; }
+    .demo-panel > p { margin: 0 0 12px; color: #77717b; font-size: 10px; line-height: 1.6; }
+    .demo-panel label { display: block; margin: 10px 0 5px; color: #5b5362; font-size: 10px; font-weight: 750; }
+    .demo-panel input,.demo-panel textarea { display: block; width: 100%; border: 1px solid #e1dce5; border-radius: 8px; padding: 9px 10px; background: #fff; color: #393440; font: inherit; font-size: 11px; }
+    .demo-panel textarea { min-height: 75px; resize: vertical; }
+    .mini-letter { min-height: 183px; padding: 20px; border: 1px solid #b7a8c8; border-radius: 10px; background: linear-gradient(145deg,#f5f0fa,#ebe4f3 60%,#f8f3eb); box-shadow: 0 10px 24px rgba(44,32,59,.1); transition: background .2s ease,color .2s ease; }
+    .mini-letter[data-theme="night"] { border-color: #746658; background: radial-gradient(ellipse at 90% 100%,rgba(112,91,72,.28),transparent 56%),linear-gradient(145deg,#171719,#292827 58%,#24211f); color: #eee9e2; }
+    .mini-letter[data-theme="night"] .mini-letter-label,.mini-letter[data-theme="night"] h4 { color: #dec6aa; }
+    .mini-letter-label { color: #816b99; font-size: 8px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .mini-letter h4 { margin: 12px 0 7px; color: #49365f; font-family: "Palatino Linotype",Georgia,serif; font-size: 21px; font-weight: 500; }
+    .mini-letter p { margin: 0; color: inherit; font-family: Georgia,serif; font-size: 11px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .demo-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .demo-controls .button { min-height: 34px; font-size: 10px; }
+    .demo-status { min-height: 14px; margin: 7px 0 0; color: #58705e; font-size: 10px; }
+    .code-block { position: relative; margin-top: 10px; padding: 14px; overflow-x: auto; border: 1px solid #3d3445; border-radius: 10px; background: #211c28; color: #eee7f4; font-size: 10px; line-height: 1.65; }
+    .code-block pre { margin: 0; white-space: pre; }
+    .copy-button { position: absolute; top: 7px; right: 7px; min-height: 27px; padding: 0 9px; border: 1px solid #5a4d65; border-radius: 7px; background: #322a39; color: #eee7f4; font-size: 9px; cursor: pointer; }
+    .git-workflow { display: grid; gap: 8px; }
+    .workflow-item { display: grid; grid-template-columns: 26px 1fr; gap: 9px; align-items: start; padding: 10px; border: 1px solid #ebe6ee; border-radius: 10px; background: #fff; }
+    .workflow-item span { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 8px; background: #f0ebf6; color: #5d4780; font-size: 10px; font-weight: 800; }
+    .workflow-item strong { display: block; color: #453650; font-size: 10px; }
+    .workflow-item p { margin: 3px 0 0; color: #77717b; font-size: 9px; line-height: 1.55; }
+    .security-list { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-top: 12px; }
+    .security-item { padding: 11px; border: 1px solid #e8e3e9; border-radius: 10px; background: #fff; }
+    .security-item strong { display: block; margin-bottom: 4px; color: #49365f; font-size: 10px; }
+    .security-item span { color: #77717b; font-size: 9px; line-height: 1.5; }
+    .notice { margin-top: 24px; padding: 15px 17px; border-left: 3px solid #8c70ae; border-radius: 0 10px 10px 0; background: #f0ebf6; color: #625a68; font-size: 10px; line-height: 1.65; }
+    footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 17px; padding: 18px; border-top: 1px solid #e8e2eb; color: #817b84; font-size: 10px; }
+    footer a { color: #66517f; text-underline-offset: 3px; }
+    @media(max-width:800px) { .stack-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .hero { padding: 34px; } }
+    @media(max-width:600px) { .topbar { min-height: 65px; } .nav-links { gap: 12px; font-size: 10px; } .hero { margin-top: 18px; padding: 27px 22px; } .hero::after { right:-190px; } .stack-grid,.demo-grid { grid-template-columns: 1fr; } .flow { grid-template-columns: 1fr; gap: 7px; } .flow-step { min-height: unset; text-align: left; } .flow-step span { display: inline-block; width: 29px; margin: 0 5px 0 0; vertical-align: middle; } .flow-step strong,.flow-step small { display: inline; } .flow-step small::before { content: " — "; } .flow-step:not(:last-child)::after { top: auto; right: 14px; bottom: -14px; transform: rotate(90deg); } .security-list { grid-template-columns: 1fr; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition-duration:.01ms!important; animation-duration:.01ms!important; animation-iteration-count:1!important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html">PROJECTEDU · TECH STUDIO</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="home.html">Home</a>
+      <a href="index.html">Letter writer</a>
+      <a href="terms.html">Terms</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <span class="eyebrow">An interactive learning corner</span>
+      <h1 id="page-title">The ideas behind a modern web app.</h1>
+      <p>Explore how structure, style, interaction, version control, backend services, databases, security, and deployment fit together. This is a learning guide—not a claim that every technology shown is already running this site.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#stack">Explore the stack ↓</a>
+        <a class="button" href="index.html">Open PROJECTEDU</a>
+      </div>
+    </section>
+
+    <aside class="reality-note" aria-label="Current implementation note">
+      <span class="note-icon" aria-hidden="true">ℹ️</span>
+      <div>
+        <strong>What this website uses today</strong>
+        <p>The existing letter writer is built with HTML, CSS, and browser JavaScript, served locally by a PowerShell server. The optional AI features use a server-side OpenAI proxy. Drafts are browser-local and shareable conversations travel in links. React, GitHub, and a database below are learning concepts and a suggested growth path—not currently integrated into this workspace.</p>
+      </div>
+    </aside>
+
+    <section id="stack" aria-labelledby="stack-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" style="color:#806c9d">Explore each layer</p>
+          <h2 id="stack-title">From a page to a product</h2>
+        </div>
+        <p>Filter the cards by role, then open “How it fits” for the practical job each tool does.</p>
+      </div>
+      <div class="filter-bar" role="group" aria-label="Filter technology cards">
+        <button class="filter-button" type="button" data-filter="all" aria-pressed="true">Everything</button>
+        <button class="filter-button" type="button" data-filter="frontend" aria-pressed="false">Frontend</button>
+        <button class="filter-button" type="button" data-filter="workflow" aria-pressed="false">Git &amp; delivery</button>
+        <button class="filter-button" type="button" data-filter="backend" aria-pressed="false">Backend &amp; data</button>
+        <button class="filter-button" type="button" data-filter="security" aria-pressed="false">Security</button>
+      </div>
+      <div class="stack-grid" id="stack-grid">
+        <article class="stack-card" data-category="frontend">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">⌘</span><span class="tag tag-live">In use today</span></div>
+          <h3>HTML</h3><p class="role">The meaning and structure</p><p>Semantic elements give the app its content, forms, navigation, labels, and accessible page outline.</p>
+          <details><summary>How it fits</summary><p>Use landmarks such as <code>main</code>, <code>nav</code>, and <code>section</code>. Associate labels with controls so assistive technology and browsers understand the interface.</p></details>
+        </article>
+        <article class="stack-card" data-category="frontend">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">◈</span><span class="tag tag-live">In use today</span></div>
+          <h3>CSS</h3><p class="role">The visual system</p><p>Layouts, responsive breakpoints, typography, colors, interaction feedback, and reduced-motion support.</p>
+          <details><summary>How it fits</summary><p>Keep styles consistent with design tokens, use flexible grid and flex layouts, and check contrast and keyboard focus as well as appearance.</p></details>
+        </article>
+        <article class="stack-card" data-category="frontend">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">⚡</span><span class="tag tag-live">In use today</span></div>
+          <h3>JavaScript</h3><p class="role">The behavior and state</p><p>Updates the letter preview, saves drafts locally, builds share links, opens chat, and calls the AI endpoint.</p>
+          <details><summary>How it fits</summary><p>Validate input, update the interface from explicit state, handle network errors visibly, and use text rendering for user content rather than inserting it as HTML.</p></details>
+        </article>
+        <article class="stack-card" data-category="frontend">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">⚛</span><span class="tag">Growth path</span></div>
+          <h3>React</h3><p class="role">A component-based frontend</p><p>A modern React app could divide the editor into reusable components and keep form and conversation state explicit.</p>
+          <details><summary>How it fits</summary><p>React is not loaded by the current site. For a rebuild, use React with TypeScript, Vite, accessible components, tested forms, and a small set of clearly owned state.</p></details>
+        </article>
+        <article class="stack-card" data-category="workflow">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">⑂</span><span class="tag">Workflow concept</span></div>
+          <h3>Git</h3><p class="role">Track and safely evolve code</p><p>Commits record coherent changes; branches make it safer to experiment and review before merging.</p>
+          <details><summary>How it fits</summary><p>Use focused commits, review diffs, keep secrets out of history, and avoid force-pushing shared work. This workspace is not currently initialized as a Git repository.</p></details>
+        </article>
+        <article class="stack-card" data-category="workflow">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">◉</span><span class="tag">Workflow concept</span></div>
+          <h3>GitHub</h3><p class="role">Collaborate and automate</p><p>Host a repository, review pull requests, track work, and run automated checks with GitHub Actions.</p>
+          <details><summary>How it fits</summary><p>Protect the main branch, require checks and review for changes, use Dependabot or equivalent dependency monitoring, and keep deployment secrets in a secret store—not in source files.</p></details>
+        </article>
+        <article class="stack-card" data-category="backend">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">⇄</span><span class="tag tag-live">Small local API today</span></div>
+          <h3>Backend</h3><p class="role">Trusted server-side operations</p><p>The current PowerShell server serves pages and proxies optional AI requests without exposing the API key in browser code.</p>
+          <details><summary>How it fits</summary><p>A growth path could use a typed Node.js API, validate each request, authenticate users where needed, apply rate limits, and enforce authorization on every conversation operation.</p></details>
+        </article>
+        <article class="stack-card" data-category="backend">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">▤</span><span class="tag">Growth path</span></div>
+          <h3>Database</h3><p class="role">Durable shared information</p><p>The current app does not store conversations in an online database. PostgreSQL could power account-backed shared threads.</p>
+          <details><summary>How it fits</summary><p>Model users, conversations, participants, and messages; use migrations, foreign keys, least-privilege database roles, parameterized queries, backups, and retention rules.</p></details>
+        </article>
+        <article class="stack-card" data-category="security">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">♢</span><span class="tag">Every layer</span></div>
+          <h3>Web security</h3><p class="role">Protect people and their data</p><p>Security includes safe rendering, validation, secrets handling, access control, transport security, and resilient dependencies.</p>
+          <details><summary>How it fits</summary><p>Use HTTPS, secure and HttpOnly cookies when applicable, CSRF protections for cookie-authenticated writes, output encoding, server-side authorization, secure headers, logging without secrets, and regular dependency updates.</p></details>
+        </article>
+        <article class="stack-card" data-category="workflow security">
+          <div class="card-top"><span class="card-icon" aria-hidden="true">☁</span><span class="tag">Deployment concept</span></div>
+          <h3>Hosting &amp; deployment</h3><p class="role">Deliver the app reliably</p><p>Publish the frontend over HTTPS, deploy the API separately if needed, and configure production environment variables.</p>
+          <details><summary>How it fits</summary><p>A common architecture uses a static frontend host/CDN, a managed backend service, and managed PostgreSQL. CI can test and build on pull requests, then deploy from a protected main branch. No hosting account is connected here yet.</p></details>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="architecture-title">
+      <div class="section-head">
+        <div><p class="eyebrow" style="color:#806c9d">A useful mental model</p><h2 id="architecture-title">How the layers work together</h2></div>
+        <p>For a future shared-conversation build, a request can travel through the layers like this.</p>
+      </div>
+      <div class="flow" aria-label="Request flow from user interface to deployment">
+        <div class="flow-step"><span aria-hidden="true">🧑</span><strong>Browser UI</strong><small>React + HTML/CSS</small></div>
+        <div class="flow-step"><span aria-hidden="true">🔐</span><strong>Secure API</strong><small>Validate &amp; authorize</small></div>
+        <div class="flow-step"><span aria-hidden="true">🗃️</span><strong>Database</strong><small>Persist the thread</small></div>
+        <div class="flow-step"><span aria-hidden="true">✅</span><strong>GitHub Actions</strong><small>Test &amp; build</small></div>
+        <div class="flow-step"><span aria-hidden="true">☁️</span><strong>HTTPS hosting</strong><small>Deploy frontend + API</small></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="playground-title">
+      <div class="section-head">
+        <div><p class="eyebrow" style="color:#806c9d">Try a tiny demo</p><h2 id="playground-title">HTML + CSS + JavaScript</h2></div>
+        <p>Edit the sample fields or change the theme. The preview updates in your browser; this demonstration does not send or save your text.</p>
+      </div>
+      <div class="demo-grid">
+        <section class="demo-panel" aria-labelledby="demo-input-title">
+          <h3 id="demo-input-title">Change the content</h3>
+          <p>HTML provides the fields; JavaScript synchronizes their values with the preview.</p>
+          <label for="demo-recipient">Recipient</label><input id="demo-recipient" maxlength="80" value="Someone wonderful">
+          <label for="demo-message">Message</label><textarea id="demo-message" maxlength="500">I thought of you today and wanted to send a little kindness your way.</textarea>
+          <div class="demo-controls"><button class="button" id="theme-toggle" type="button" aria-pressed="false">Try the dark theme</button><button class="button" id="reset-demo" type="button">Reset example</button></div>
+          <p class="demo-status" id="demo-status" role="status" aria-live="polite">Live preview — your text stays in this page.</p>
+        </section>
+        <section class="demo-panel" aria-labelledby="demo-preview-title">
+          <h3 id="demo-preview-title">Live letter card</h3>
+          <p>CSS styles the card; the browser DOM displays the text safely.</p>
+          <article class="mini-letter" id="mini-letter" aria-label="Interactive sample letter">
+            <span class="mini-letter-label">A little note</span>
+            <h4 id="demo-preview-recipient">To Someone wonderful,</h4>
+            <p id="demo-preview-message">I thought of you today and wanted to send a little kindness your way.</p>
+          </article>
+        </section>
+      </div>
+    </section>
+
+    <section aria-labelledby="workflow-title">
+      <div class="section-head">
+        <div><p class="eyebrow" style="color:#806c9d">Build with confidence</p><h2 id="workflow-title">Git → GitHub → deployment</h2></div>
+        <p>A small, repeatable workflow helps teams ship improvements without losing track of what changed.</p>
+      </div>
+      <div class="demo-grid">
+        <section class="demo-panel" aria-label="Git command example">
+          <h3>Track a focused change</h3>
+          <p>Example commands for a local project you own. Review the changes before committing.</p>
+          <div class="code-block"><button class="copy-button" type="button" data-copy="git init&#10;git status&#10;git add home.html index.html technology.html terms.html README.md server.ps1 cat-background.jpg&#10;git commit -m &quot;Build technology showcase&quot;&#10;git branch -M main&#10;git remote add origin YOUR_REPOSITORY_URL&#10;git push -u origin main">Copy</button><pre><code>git init
+git status
+git add home.html index.html technology.html terms.html README.md server.ps1 cat-background.jpg
+git commit -m "Build technology showcase"
+git branch -M main
+git remote add origin YOUR_REPOSITORY_URL
+git push -u origin main</code></pre></div>
+          <p class="demo-status">Review <code>git status</code> and scan staged files for secrets before committing. Never add API keys or credentials.</p>
+          <p class="demo-status copy-status" aria-live="polite"></p>
+        </section>
+        <section class="demo-panel" aria-labelledby="github-title">
+          <h3 id="github-title">Use GitHub for the team loop</h3>
+          <div class="git-workflow">
+            <div class="workflow-item"><span>1</span><div><strong>Branch</strong><p>Make one feature or fix on a short-lived branch.</p></div></div>
+            <div class="workflow-item"><span>2</span><div><strong>Pull request</strong><p>Explain the change and review its diff with a teammate.</p></div></div>
+            <div class="workflow-item"><span>3</span><div><strong>Automated checks</strong><p>Run tests, linting, type checks, and a production build.</p></div></div>
+            <div class="workflow-item"><span>4</span><div><strong>Deploy</strong><p>Merge after checks pass; deploy from a protected branch.</p></div></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section aria-labelledby="security-title">
+      <div class="section-head">
+        <div><p class="eyebrow" style="color:#806c9d">Built in, not bolted on</p><h2 id="security-title">A practical security baseline</h2></div>
+        <p>Security is a system of small controls across the browser, server, data store, and release process.</p>
+      </div>
+      <div class="security-list">
+        <div class="security-item"><strong>Protect secrets</strong><span>Keep API keys in server environment variables or a managed secret store, never frontend files or Git history.</span></div>
+        <div class="security-item"><strong>Validate at the API</strong><span>Check types, lengths, ownership, and permissions on the server; browser validation is only a usability aid.</span></div>
+        <div class="security-item"><strong>Render user content as text</strong><span>Escape output, avoid unsafe HTML insertion, and use parameterized database queries.</span></div>
+        <div class="security-item"><strong>Limit access</strong><span>Authenticate and authorize each private conversation; use least privilege and safe session handling.</span></div>
+        <div class="security-item"><strong>Use HTTPS and headers</strong><span>Encrypt traffic and set appropriate content, framing, referrer, and transport security policies.</span></div>
+        <div class="security-item"><strong>Monitor and recover</strong><span>Keep dependencies current, log useful events without secrets, back up data, and test restoration.</span></div>
+      </div>
+      <p class="notice">Learning note: the current local demo intentionally does not have user accounts or an online database. Publishing the static site does not automatically make its link-based conversations private or add server-side account security. A production shared inbox needs a deliberate backend, access-control model, privacy policy, and security review.</p>
+    </section>
+  </main>
+  <footer>
+    <span>PROJECTEDU learning studio</span>
+    <a href="home.html">Home</a>
+    <a href="index.html">Letter writer</a>
+    <a href="terms.html">Terms &amp; Conditions</a>
+  </footer>
+  <script>
+    (() => {
+      const cards = Array.from(document.querySelectorAll(".stack-card"));
+      document.querySelectorAll(".filter-button").forEach(button => {
+        button.addEventListener("click", () => {
+          const filter = button.dataset.filter;
+          document.querySelectorAll(".filter-button").forEach(filterButton => {
+            filterButton.setAttribute("aria-pressed", String(filterButton === button));
+          });
+          cards.forEach(card => {
+            card.hidden = filter !== "all" && !card.dataset.category.split(" ").includes(filter);
+          });
+        });
+      });
+
+      const recipientInput = document.getElementById("demo-recipient");
+      const messageInput = document.getElementById("demo-message");
+      const previewRecipient = document.getElementById("demo-preview-recipient");
+      const previewMessage = document.getElementById("demo-preview-message");
+      const demoStatus = document.getElementById("demo-status");
+      function updateDemo() {
+        const recipient = recipientInput.value.trim();
+        previewRecipient.textContent = `To ${recipient || "someone special"},`;
+        previewMessage.textContent = messageInput.value || "Your words will appear here.";
+        demoStatus.textContent = "Preview updated locally. Nothing has been sent or saved.";
+      }
+      recipientInput.addEventListener("input", updateDemo);
+      messageInput.addEventListener("input", updateDemo);
+      document.getElementById("theme-toggle").addEventListener("click", event => {
+        const isDark = event.currentTarget.getAttribute("aria-pressed") !== "true";
+        event.currentTarget.setAttribute("aria-pressed", String(isDark));
+        event.currentTarget.textContent = isDark ? "Try the light theme" : "Try the dark theme";
+        document.getElementById("mini-letter").dataset.theme = isDark ? "night" : "light";
+        demoStatus.textContent = `Theme changed to ${isDark ? "dark" : "light"} using CSS.`;
+      });
+      document.getElementById("reset-demo").addEventListener("click", () => {
+        recipientInput.value = "Someone wonderful";
+        messageInput.value = "I thought of you today and wanted to send a little kindness your way.";
+        const themeToggle = document.getElementById("theme-toggle");
+        themeToggle.setAttribute("aria-pressed", "false");
+        themeToggle.textContent = "Try the dark theme";
+        document.getElementById("mini-letter").dataset.theme = "light";
+        updateDemo();
+      });
+      document.querySelectorAll(".copy-button").forEach(button => {
+        button.addEventListener("click", async () => {
+          const status = button.closest(".demo-panel").querySelector(".copy-status");
+          try {
+            await navigator.clipboard.writeText(button.dataset.copy);
+            status.textContent = "Example commands copied.";
+          } catch (error) {
+            console.error("Could not copy Git example commands.", error);
+            status.textContent = "Clipboard access is unavailable here. Select the commands to copy them.";
+            const code = button.closest(".code-block").querySelector("code");
+            const range = document.createRange();
+            range.selectNodeContents(code);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

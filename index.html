@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f5ef">
+  <title>PROJECTEDU</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f5ef;
+      --surface: #fffefa;
+      --ink: #26362f;
+      --muted: #778078;
+      --line: #e6e7de;
+      --green: #315d49;
+      --green-dark: #244735;
+      --sage: #e9eee5;
+      --accent: #d7e5d5;
+      --shadow: 0 22px 70px rgba(43, 54, 44, .08);
+      --font-ui: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-reading: Georgia, "Times New Roman", serif;
+      --font-display: "Palatino Linotype", "Book Antiqua", "URW Palladio L", Georgia, serif;
+    }
+
+    :root[data-font-style="classic"] {
+      --font-ui: Georgia, "Times New Roman", serif;
+      --font-reading: Georgia, "Times New Roman", serif;
+    }
+    :root[data-font-style="friendly"] {
+      --font-ui: "Trebuchet MS", "Segoe UI", sans-serif;
+      --font-reading: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+    :root[data-font-style="typewriter"] {
+      --font-ui: "Courier New", monospace;
+      --font-reading: "Courier New", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 12% 3%, rgba(223, 231, 216, .74), transparent 28rem),
+        radial-gradient(ellipse at 88% 92%, rgba(220, 208, 238, .62), transparent 31rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .kitty-decoration {
+      position: fixed;
+      z-index: 0;
+      right: max(18px, calc((100vw - 1160px) / 2 - 60px));
+      bottom: 12px;
+      width: 178px;
+      height: auto;
+      color: #78947e;
+      opacity: .48;
+      pointer-events: none;
+      user-select: none;
+    }
+    .page-shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1220px;
+      min-height: calc(100vh - 56px);
+      padding: 0 42px 52px;
+      margin: 28px auto;
+      border: 2px solid #39205d;
+      border-radius: 27px;
+      background: transparent;
+      box-shadow: 0 18px 60px rgba(49, 27, 81, .17), 0 3px 12px rgba(49, 27, 81, .08);
+    }
+    .paw-watermark {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      color: #1d315f;
+      opacity: .2;
+      pointer-events: none;
+    }
+    .page-shell::before {
+      position: absolute;
+      z-index: 2;
+      inset: 8px;
+      border: 1px solid rgba(87, 56, 130, .36);
+      border-radius: 20px;
+      content: "";
+      pointer-events: none;
+    }
+    .page-shell::after {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      width: 54px;
+      z-index: 4;
+      color: #d4c5f0;
+      background: transparent;
+      content: "✳";
+      font-size: 13px;
+      line-height: 16px;
+      text-align: center;
+      transform: translateX(-50%);
+    }
+    .topbar { position: relative; z-index: 3; }
+    .hero-panel {
+      position: relative;
+      z-index: 1;
+      margin: 0 -42px;
+      padding: 0 42px;
+      border-radius: 0 0 18px 18px;
+      color: #fff;
+      background:
+        radial-gradient(ellipse at 8% 0%, rgba(38, 104, 184, .7), transparent 48%),
+        radial-gradient(ellipse at 95% 95%, rgba(177, 49, 78, .58), transparent 48%),
+        linear-gradient(120deg, #090c19 0%, #11182a 54%, #17101e 100%);
+    }
+    .topbar {
+      height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, .2);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; letter-spacing: -.04em; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      background: var(--green);
+      color: white;
+      border-radius: 11px 11px 11px 3px;
+      font-size: 17px;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+    .brand-logo { display: none; width: 100%; height: 100%; object-fit: contain; background: var(--surface); }
+    .brand-name { color: #fff; font-size: 16px; }
+    .header-tools { display: flex; align-items: center; gap: 15px; }
+    .top-note { color: rgba(255, 255, 255, .8); font-size: 13px; }
+    .logo-controls { display: flex; align-items: center; gap: 7px; }
+    .font-select {
+      height: 35px;
+      width: 112px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .94);
+      color: #303044;
+      font-size: 11px;
+    }
+    .logo-upload {
+      min-height: 35px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .94);
+      color: #303044;
+      font-size: 11px;
+      font-weight: 700;
+      transition: background .18s ease, border-color .18s ease;
+    }
+    .logo-upload:hover { background: #f8f9f5; border-color: #cdd6cc; }
+    .logo-remove {
+      display: none;
+      min-height: 35px;
+      padding: 0 8px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .logo-remove:hover { color: var(--ink); }
+    .logo-file-input { display: none; }
+
+    .intro { padding: 54px 0 0; }
+    .eyebrow {
+      color: #d5c5f3;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: 10px;
+      font-weight: 750;
+    }
+    h1 {
+      color: #fff;
+      font-family: var(--font-reading);
+      font-size: clamp(36px, 5vw, 55px);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: 1.06;
+      margin: 13px 0 12px;
+    }
+    .intro p { color: rgba(255, 255, 255, .82); margin: 0; font-size: 15px; line-height: 1.65; }
+    .intro-divider {
+      width: 100%;
+      height: 1px;
+      margin: 25px 0 28px;
+      border: 0;
+      background: linear-gradient(to right, rgba(255, 255, 255, .58), rgba(255, 255, 255, .12));
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid rgba(38, 54, 47, .07);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 21px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .card-heading h2 { font-size: 14px; margin: 0; font-weight: 700; }
+    .step {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .form-body { padding: 22px 24px 24px; }
+    .field { margin-bottom: 19px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    label {
+      display: block;
+      color: #515e55;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    input, select { height: 43px; padding: 0 12px; font-size: 13px; }
+    textarea {
+      display: block;
+      min-height: 226px;
+      resize: vertical;
+      padding: 13px 14px;
+      font-family: var(--font-reading);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .ai-helper {
+      margin: -4px 0 18px;
+      padding: 14px;
+      border: 1px solid rgba(104, 81, 148, .19);
+      border-radius: 12px;
+      background: linear-gradient(125deg, #f6f3fc, #f0f5f2);
+    }
+    .ai-helper-heading { color: #43345f; font-size: 12px; font-weight: 750; margin: 0 0 4px; }
+    .ai-helper-description { color: #71777a; font-size: 11px; line-height: 1.55; margin: 0 0 11px; }
+    .ai-helper-options { display: grid; grid-template-columns: minmax(110px, .65fr) minmax(0, 1.35fr); gap: 10px; margin-bottom: 10px; }
+    .ai-helper-options label { margin: 0; }
+    .ai-helper-options select, .ai-helper-options input { margin-top: 6px; background: #fff; }
+    .ai-helper .button { min-height: 36px; }
+    .ai-result { margin-top: 12px; }
+    .ai-result[hidden] { display: none; }
+    .ai-result-label { color: #556357; display: block; font-size: 10px; font-weight: 700; margin-bottom: 6px; }
+    .ai-result-text {
+      width: 100%;
+      min-height: 96px;
+      padding: 10px 12px;
+      border: 1px solid #dcd5ea;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, .88);
+      color: #34433b;
+      font-family: var(--font-reading);
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .ai-result-actions { display: flex; gap: 8px; margin-top: 9px; }
+    .ai-status { min-height: 16px; margin: 8px 0 0; color: #6c6479; font-size: 10px; }
+    .ai-status[data-state="error"] { color: #a43f4d; }
+    input::placeholder, textarea::placeholder { color: #adb4ac; }
+    input:focus, select:focus, textarea:focus {
+      border-color: #8da995;
+      box-shadow: 0 0 0 3px rgba(141, 169, 149, .16);
+    }
+    .message-label { display: flex; justify-content: space-between; align-items: center; }
+    .message-label label { margin-bottom: 8px; }
+    .counter { color: #9aa198; font-size: 10px; margin-bottom: 8px; }
+    .actions { display: flex; gap: 9px; flex-wrap: wrap; padding-top: 1px; }
+    .share-panel {
+      margin-top: 17px;
+      padding: 14px;
+      border: 1px solid rgba(70, 102, 83, .16);
+      border-radius: 12px;
+      background: linear-gradient(130deg, #f4f7f2, #f5f2fa);
+    }
+    .share-heading { color: #354b3b; font-size: 12px; font-weight: 750; margin: 0 0 4px; }
+    .share-description { color: #717a72; font-size: 10px; line-height: 1.5; margin: 0 0 11px; }
+    .share-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .share-button {
+      display: inline-flex;
+      min-height: 36px;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 10px;
+      border: 1px solid #e0e5dd;
+      border-radius: 9px;
+      background: #fff;
+      color: #37443a;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .share-button:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(49, 58, 48, .09); }
+    .share-symbol { font-size: 15px; font-weight: 800; line-height: 1; }
+    .share-whatsapp .share-symbol { color: #168c50; }
+    .share-instagram .share-symbol { color: #bd3e84; }
+    .share-tiktok .share-symbol { color: #222; }
+    .share-facebook .share-symbol { color: #2665ae; }
+    .share-status { min-height: 15px; margin: 8px 0 0; color: #69796a; font-size: 10px; }
+    .share-status[data-state="error"] { color: #a43f4d; }
+    .receiver-link-panel {
+      margin-top: 17px;
+      padding: 14px;
+      border: 1px solid rgba(105, 81, 148, .17);
+      border-radius: 12px;
+      background: linear-gradient(130deg, #f4f1fa, #f0f5f2);
+    }
+    .receiver-link-heading { color: #43345f; font-size: 12px; font-weight: 750; margin: 0 0 4px; }
+    .receiver-link-description { color: #71777a; font-size: 10px; line-height: 1.55; margin: 0 0 11px; }
+    .receiver-link-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .receiver-link-result { display: flex; gap: 7px; margin-top: 10px; }
+    .receiver-link-result[hidden] { display: none; }
+    .receiver-link-input {
+      min-width: 0;
+      height: 36px;
+      flex: 1;
+      padding: 0 9px;
+      border: 1px solid #ddd6eb;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .9);
+      color: #554872;
+      font-size: 10px;
+    }
+    .receiver-link-anchor { display: inline-block; margin-top: 9px; color: #5d4887; font-size: 11px; font-weight: 700; overflow-wrap: anywhere; text-decoration: underline; text-underline-offset: 2px; }
+    .receiver-link-anchor[hidden] { display: none; }
+    .receiver-link-status { min-height: 15px; margin: 8px 0 0; color: #69796a; font-size: 10px; }
+    .receiver-link-status[data-state="error"] { color: #a43f4d; }
+    .recipient-mode .form-card,
+    .recipient-mode .letter-tools,
+    .recipient-mode .share-panel,
+    .recipient-mode .receiver-link-panel,
+    .recipient-mode .footer-note { display: none !important; }
+    .recipient-mode .workspace { grid-template-columns: minmax(0, 780px); justify-content: center; }
+    .recipient-mode .preview-card { box-shadow: var(--shadow); }
+    .recipient-mode .intro { padding-bottom: 26px; }
+    .recipient-mode #page-title { font-size: clamp(34px, 4.6vw, 49px); }
+    .button {
+      min-height: 40px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 700;
+      transition: background .18s ease, transform .18s ease, border-color .18s ease;
+    }
+    .button:hover { transform: translateY(-1px); }
+    .button-primary { background: var(--green); color: #fff; }
+    .button-primary:hover { background: var(--green-dark); }
+    .button-secondary { background: #fff; border-color: var(--line); color: #4d5a51; }
+    .button-secondary:hover { background: #f8f9f5; border-color: #cdd6cc; }
+    .button-quiet { background: transparent; color: #758077; padding: 0 9px; }
+    .button-quiet:hover { background: #f3f4ef; }
+    .button-icon { font-size: 14px; margin-right: 6px; vertical-align: -1px; }
+
+    .preview-card { background: #f1f3ed; box-shadow: none; }
+    .preview-card .card-heading { border-bottom-color: rgba(38, 54, 47, .09); }
+    .preview-wrap { padding: 24px; }
+    .letter-tools { margin-bottom: 14px; }
+    .letter-tools-label {
+      color: #52615a;
+      display: block;
+      font-size: 10px;
+      font-weight: 750;
+      letter-spacing: .1em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .sticker-list, .reaction-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .sticker-button, .reaction-button {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 35px;
+      padding: 0;
+      border: 1px solid #e0dceb;
+      border-radius: 11px;
+      background: rgba(255, 255, 255, .8);
+      font-size: 17px;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+    .sticker-button:hover, .reaction-button:hover { transform: translateY(-2px); border-color: #a99acb; }
+    .sticker-button[aria-pressed="true"], .reaction-button[aria-pressed="true"] {
+      border-color: #7060a0;
+      background: #eeeafb;
+      box-shadow: 0 0 0 2px rgba(112, 96, 160, .12);
+    }
+    .letter {
+      position: relative;
+      isolation: isolate;
+      min-height: 478px;
+      padding: 35px 35px 30px;
+      background:
+        radial-gradient(ellipse at 100% 100%, rgba(191, 171, 247, .42), transparent 54%),
+        radial-gradient(ellipse at 0 0, rgba(218, 204, 255, .58), transparent 56%),
+        linear-gradient(145deg, #f2edff, #e9e0fb 58%, #f5efff);
+      border: 1px solid #a68be0;
+      border-radius: 9px;
+      box-shadow: 0 0 0 1px rgba(173, 144, 235, .12), 0 0 20px rgba(145, 105, 222, .25), 0 0 42px rgba(145, 105, 222, .16), 0 12px 30px rgba(48, 40, 85, .13);
+      display: flex;
+      flex-direction: column;
+      animation: letter-arrive 850ms cubic-bezier(.2, .75, .25, 1) both,
+        letter-float 8s ease-in-out 850ms infinite;
+    }
+    @keyframes letter-arrive {
+      from { opacity: 0; transform: translateY(18px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes letter-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .letter-sticker {
+      position: absolute;
+      z-index: 2;
+      top: 20px;
+      right: 20px;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(105, 81, 148, .19);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .8);
+      box-shadow: 0 4px 12px rgba(52, 45, 82, .11);
+      font-size: 23px;
+      transform: rotate(9deg);
+    }
+    .letter-rose {
+      position: absolute;
+      z-index: 2;
+      width: 32px;
+      height: 38px;
+      color: #9d4b72;
+      opacity: .82;
+      pointer-events: none;
+    }
+    .letter-rose-top { top: 12px; left: 12px; transform: rotate(-12deg); }
+    .letter-rose-bottom { right: 12px; bottom: 12px; transform: rotate(15deg) scale(.88); }
+    .floating-heart {
+      position: absolute;
+      z-index: 2;
+      color: #aa4e83;
+      font-size: 17px;
+      line-height: 1;
+      opacity: .28;
+      pointer-events: none;
+      animation: heart-drift 5s ease-in-out infinite;
+    }
+    .heart-one { top: 30%; right: 13%; animation-delay: -.8s; }
+    .heart-two { top: 56%; left: 12%; font-size: 14px; animation-delay: -2.4s; }
+    .heart-three { right: 17%; bottom: 26%; font-size: 13px; animation-delay: -3.5s; }
+    @keyframes heart-drift {
+      0%, 100% { transform: translateY(3px) rotate(-8deg); }
+      50% { transform: translateY(-9px) rotate(8deg); }
+    }
+    .letter::before {
+      position: absolute;
+      z-index: 3;
+      inset: 9px;
+      border: 1px solid rgba(110, 82, 168, .34);
+      border-radius: 5px;
+      content: "";
+      pointer-events: none;
+    }
+    .letter::after {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(105deg, rgba(244, 239, 255, .92), rgba(236, 227, 255, .87) 58%, rgba(246, 239, 255, .82));
+      content: "";
+      pointer-events: none;
+    }
+    .letter-cat {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      object-fit: cover;
+      object-position: center 43%;
+      opacity: .24;
+      filter: saturate(.72);
+      pointer-events: none;
+    }
+    .letter-date, .letter-to, .letter-title, .letter-message, .letter-signoff { position: relative; z-index: 2; }
+    .letter-date { color: #436b52; font-size: 10px; letter-spacing: .08em; margin-bottom: 34px; padding-left: 23px; }
+    .letter-to { color: #5c4785; font-size: 12px; font-weight: 600; margin-bottom: 11px; }
+    .letter-title {
+      color: #3d326c;
+      font-family: var(--font-reading);
+      font-size: 23px;
+      font-weight: 400;
+      line-height: 1.35;
+      margin: 0 0 18px;
+      overflow-wrap: anywhere;
+    }
+    .letter-title::after {
+      display: block;
+      width: 54px;
+      height: 2px;
+      margin-top: 12px;
+      background: linear-gradient(to right, #6b55a2, rgba(83, 151, 104, .2));
+      content: "";
+    }
+    .letter-message {
+      color: #293b50;
+      font-family: var(--font-reading);
+      font-size: 14px;
+      line-height: 2.05;
+      margin: 0;
+      min-height: 98px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .letter-signoff { color: #3d684b; font-family: var(--font-reading); font-size: 13px; margin-top: auto; padding-top: 23px; }
+    .letter-signoff::before { content: "With care,"; display: block; margin-bottom: 10px; }
+    body:not(.recipient-mode) .letter {
+      border-color: #78695d;
+      background:
+        radial-gradient(ellipse at 100% 100%, rgba(112, 91, 72, .34), transparent 56%),
+        radial-gradient(ellipse at 0 0, rgba(92, 98, 104, .3), transparent 58%),
+        linear-gradient(145deg, #171719, #292827 58%, #24211f);
+      box-shadow: 0 0 0 1px rgba(176, 157, 137, .14), 0 0 24px rgba(54, 47, 42, .34), 0 14px 34px rgba(18, 17, 17, .3);
+    }
+    body:not(.recipient-mode) .letter::before { border-color: rgba(190, 170, 148, .38); }
+    body:not(.recipient-mode) .letter::after {
+      background: linear-gradient(105deg, rgba(16, 17, 19, .88), rgba(31, 30, 29, .83) 58%, rgba(39, 33, 29, .84));
+    }
+    body:not(.recipient-mode) .letter-cat { opacity: .16; filter: saturate(.42) brightness(.72); }
+    body:not(.recipient-mode) .letter-sticker {
+      border-color: rgba(194, 172, 145, .38);
+      background: rgba(39, 37, 35, .86);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .28);
+    }
+    body:not(.recipient-mode) .floating-heart { color: #c2a889; opacity: .38; }
+    body:not(.recipient-mode) .letter-date { color: #c1ad91; }
+    body:not(.recipient-mode) .letter-to { color: #d2b99c; }
+    body:not(.recipient-mode) .letter-title { color: #f0e6d9; }
+    body:not(.recipient-mode) .letter-title::after { background: linear-gradient(to right, #b99d7c, rgba(193, 183, 169, .2)); }
+    body:not(.recipient-mode) .letter-message { color: #eee9e2; }
+    body:not(.recipient-mode) .letter-signoff { color: #c6b59f; }
+    .letter-footer {
+      padding: 17px 3px 0;
+      display: flex;
+      justify-content: space-between;
+      color: #879188;
+      font-size: 10px;
+    }
+    .reaction-box {
+      margin-top: 17px;
+      padding: 13px 14px;
+      border: 1px solid rgba(105, 81, 148, .14);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .58);
+    }
+    .reaction-heading { color: #514367; font-size: 11px; font-weight: 700; margin: 0 0 9px; }
+    .reaction-button { width: 39px; height: 37px; font-size: 19px; }
+    .reaction-status { min-height: 15px; margin: 8px 0 0; color: #69796a; font-size: 10px; }
+    .reply-panel {
+      margin-top: 17px;
+      padding: 16px;
+      border: 1px solid rgba(105, 81, 148, .17);
+      border-radius: 12px;
+      background: linear-gradient(130deg, #f4f1fa, #f0f5f2);
+    }
+    .reply-panel[hidden] { display: none; }
+    .reply-heading { color: #43345f; font-size: 14px; margin: 0 0 5px; }
+    .reply-description, .reply-empty { color: #71777a; font-size: 11px; line-height: 1.6; margin: 0 0 12px; }
+    .reply-thread { display: grid; gap: 8px; margin: 0 0 12px; }
+    .reply-thread[hidden], .reply-empty[hidden] { display: none; }
+    .reply-message { padding: 10px 12px; border: 1px solid rgba(105, 81, 148, .13); border-radius: 9px; background: rgba(255, 255, 255, .76); }
+    .reply-message-author { color: #514367; font-size: 10px; font-weight: 750; margin: 0 0 5px; }
+    .reply-message-body { color: #48534c; font-size: 12px; line-height: 1.65; margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+    .reply-fields { display: grid; gap: 10px; margin-bottom: 10px; }
+    .reply-fields label { color: #52615a; display: grid; font-size: 10px; font-weight: 700; gap: 5px; }
+    .reply-fields input, .reply-fields textarea {
+      width: 100%;
+      border: 1px solid #ddd6eb;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .92);
+      color: #37443a;
+      font: inherit;
+      font-size: 12px;
+      padding: 9px 10px;
+    }
+    .reply-fields textarea { min-height: 100px; resize: vertical; }
+    .reply-result { display: flex; gap: 7px; margin-top: 10px; }
+    .reply-result[hidden] { display: none; }
+    .reply-link-input {
+      min-width: 0;
+      height: 36px;
+      flex: 1;
+      padding: 0 9px;
+      border: 1px solid #ddd6eb;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .9);
+      color: #554872;
+      font-size: 10px;
+    }
+    .reply-link-anchor { display: inline-block; margin-top: 9px; color: #5d4887; font-size: 11px; font-weight: 700; overflow-wrap: anywhere; text-decoration: underline; text-underline-offset: 2px; }
+    .reply-link-anchor[hidden] { display: none; }
+    .reply-status { min-height: 15px; margin: 8px 0 0; color: #69796a; font-size: 10px; }
+    .reply-status[data-state="error"] { color: #a43f4d; }
+    @media (prefers-reduced-motion: reduce) {
+      .letter, .floating-heart { animation: none; }
+    }
+    .footer-note { margin: 35px 0 0; color: #899188; font-size: 11px; text-align: center; }
+    .site-legal-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 12px 0 0;
+      color: #899188;
+      font-size: 11px;
+    }
+    .site-legal-links a { color: #62527e; text-underline-offset: 3px; }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 5;
+      background: #26362f;
+      color: #fff;
+      font-size: 13px;
+      padding: 12px 17px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(20, 30, 24, .2);
+      opacity: 0;
+      transform: translate(-50%, 10px);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .toast.visible { opacity: 1; transform: translate(-50%, 0); }
+    .chat-toggle {
+      position: fixed;
+      right: 24px;
+      bottom: 22px;
+      z-index: 20;
+      min-height: 48px;
+      padding: 0 17px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #7152a3, #45316f);
+      box-shadow: 0 8px 24px rgba(42, 28, 70, .28);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .chat-toggle:hover { transform: translateY(-2px); }
+    .chat-panel {
+      position: fixed;
+      right: 24px;
+      bottom: 82px;
+      z-index: 20;
+      display: flex;
+      width: min(370px, calc(100vw - 28px));
+      max-height: min(560px, calc(100vh - 104px));
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(90, 67, 132, .24);
+      border-radius: 17px;
+      background: #fbfaff;
+      box-shadow: 0 16px 48px rgba(32, 24, 51, .24);
+    }
+    .chat-panel[hidden] { display: none; }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: linear-gradient(120deg, #241a36, #514079);
+      color: #fff;
+    }
+    .chat-title { margin: 0; font-size: 14px; }
+    .chat-subtitle { margin: 3px 0 0; color: rgba(255,255,255,.78); font-size: 10px; }
+    .chat-close {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(255,255,255,.26);
+      border-radius: 50%;
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .chat-messages {
+      display: flex;
+      min-height: 170px;
+      flex: 1;
+      flex-direction: column;
+      gap: 9px;
+      overflow-y: auto;
+      padding: 14px;
+    }
+    .chat-message {
+      max-width: 88%;
+      padding: 10px 12px;
+      border: 1px solid #e8e2f0;
+      border-radius: 13px 13px 13px 4px;
+      background: #fff;
+      color: #44404d;
+      font-size: 12px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+    .chat-message[data-role="user"] {
+      align-self: flex-end;
+      border-color: #dcd1ee;
+      border-radius: 13px 13px 4px 13px;
+      background: #eee8f7;
+    }
+    .chat-message[data-role="error"] { color: #a43f4d; }
+    .chat-compose {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 8px;
+      padding: 11px;
+      border-top: 1px solid #ebe6f1;
+      background: #fff;
+    }
+    .chat-input {
+      min-height: 42px;
+      max-height: 110px;
+      resize: vertical;
+      border: 1px solid #ddd6eb;
+      border-radius: 10px;
+      padding: 10px;
+      color: #37443a;
+      font-size: 12px;
+    }
+    .chat-send { min-height: 40px; padding: 0 13px; }
+    .chat-send:disabled { cursor: wait; opacity: .65; }
+    .chat-status { min-height: 14px; margin: 0; padding: 0 13px 8px; color: #69796a; font-size: 10px; }
+    .chat-status[data-state="error"] { color: #a43f4d; }
+    h1, h2, h3, .brand-name, .letter-title {
+      font-family: var(--font-display);
+    }
+
+    @media (max-width: 780px) {
+      .page-shell { min-height: calc(100vh - 36px); padding: 0 28px 40px; margin: 18px 14px; }
+      .hero-panel { margin-right: -28px; margin-left: -28px; padding-right: 28px; padding-left: 28px; }
+      .intro { padding-top: 42px; }
+      .workspace { grid-template-columns: 1fr; }
+      .preview-wrap { padding: 18px; }
+      .letter { min-height: 400px; }
+    }
+    @media (max-width: 480px) {
+      .page-shell { min-height: calc(100vh - 24px); padding: 0 14px 32px; margin: 12px; border-radius: 18px; }
+      .hero-panel { margin-right: -14px; margin-left: -14px; padding-right: 14px; padding-left: 14px; border-radius: 0 0 13px 13px; }
+      .page-shell::before { inset: 5px; border-radius: 13px; }
+      .page-shell::after { top: -7px; }
+      .topbar { height: 68px; }
+      .top-note { font-size: 11px; }
+      .header-tools { gap: 8px; }
+      .font-select { width: 86px; height: 33px; padding: 0 5px; font-size: 10px; }
+      .top-note { display: none; }
+      .logo-upload { min-height: 33px; padding: 0 8px; font-size: 10px; }
+      .logo-remove { min-height: 33px; font-size: 10px; }
+      .brand { gap: 8px; }
+      .brand-name { font-size: 14px; }
+      .kitty-decoration { width: 118px; right: 5px; bottom: 5px; opacity: .36; }
+      .intro { padding-top: 37px; }
+      .card-heading { padding: 17px 18px; }
+      .form-body { padding: 19px 18px 20px; }
+      .field-row { gap: 10px; }
+      .ai-helper-options { grid-template-columns: 1fr; }
+      .receiver-link-result { flex-wrap: wrap; }
+      .letter { padding: 29px 24px 26px; }
+      .actions { gap: 7px; }
+      .button { padding: 0 11px; }
+      .chat-toggle { right: 13px; bottom: 13px; }
+      .chat-panel { right: 12px; bottom: 72px; max-height: calc(100vh - 86px); }
+    }
+    @media print {
+      body { background: #fff; }
+      .topbar, .intro, .form-card, .preview-card .card-heading, .letter-footer, .footer-note, .site-legal-links { display: none !important; }
+      .ai-helper { display: none !important; }
+      .share-panel { display: none !important; }
+      .chat-toggle, .chat-panel { display: none !important; }
+      .kitty-decoration, .paw-watermark { display: none !important; }
+      .hero-panel { display: contents; }
+      .page-shell { max-width: none; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: #fff; box-shadow: none; }
+      .paw-watermark { display: none; }
+      .page-shell::before, .page-shell::after { display: none; }
+      .workspace { display: block; }
+      .preview-card { border: 0; background: #fff; }
+      .preview-wrap { padding: 0; }
+      .letter-tools, .reaction-box { display: none !important; }
+      .letter, .floating-heart { animation: none !important; }
+      .letter { min-height: 95vh; padding: 48px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <svg class="kitty-decoration" viewBox="0 0 180 170" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5">
+      <path d="M49 72 40 28l36 24m31 0 35-24-8 46" fill="#e8cfc0"/>
+      <path d="M39 80c0-28 22-47 51-47s51 19 51 47-22 48-51 48-51-20-51-48Z" fill="#f1e8dc"/>
+      <path d="M67 82c0 3-2 5-5 5s-5-2-5-5 2-5 5-5 5 2 5 5Zm56 0c0 3-2 5-5 5s-5-2-5-5 2-5 5-5 5 2 5 5Z" fill="#54695b" stroke="none"/>
+      <path d="M84 96c3-4 8-4 11 0l-5 5-6-5Z" fill="#cc8f8a"/>
+      <path d="M90 101c0 6-5 9-10 7m10-7c0 6 5 9 10 7m-61-9-21-4m21 12-20 4m96-12 21-4m-21 12 20 4"/>
+      <path d="M71 124c-1 17 10 28 23 28s24-11 23-28" fill="#f1e8dc"/>
+      <path d="M79 139c7 7 16 7 23 0m-19 7 2 7m13-7-2 7"/>
+      <path d="M51 59 43 39l19 13m48 0 18-13-5 23" stroke="#c49c87" stroke-width="2"/>
+      <path d="M24 63c-5-7 2-11 7-6 0-8 9-7 9 0 7-4 11 3 5 8-6 6-13 10-13 10s-4-6-8-12Zm117 51c-5-7 2-11 7-6 0-8 9-7 9 0 7-4 11 3 5 8-6 6-13 10-13 10s-4-6-8-12Z" fill="#cfddc9" stroke="#8ba28e" stroke-width="2"/>
+    </g>
+    <path d="M64 156c12 5 42 5 54 0" stroke="#78947e" stroke-linecap="round" stroke-width="3"/>
+  </svg>
+  <div class="page-shell">
+    <svg class="paw-watermark" viewBox="0 0 1000 900" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <defs>
+        <g id="paw-print" fill="currentColor">
+          <ellipse cx="0" cy="0" rx="10" ry="8"/>
+          <ellipse cx="-12" cy="-12" rx="4.5" ry="6" transform="rotate(-24 -12 -12)"/>
+          <ellipse cx="-3" cy="-17" rx="4.5" ry="6" transform="rotate(-9 -3 -17)"/>
+          <ellipse cx="7" cy="-16" rx="4.5" ry="6" transform="rotate(10 7 -16)"/>
+          <ellipse cx="15" cy="-9" rx="4.5" ry="6" transform="rotate(28 15 -9)"/>
+        </g>
+      </defs>
+      <use href="#paw-print" transform="translate(86 170) rotate(-18) scale(1.05)"/>
+      <use href="#paw-print" transform="translate(925 140) rotate(22) scale(.86)"/>
+      <use href="#paw-print" transform="translate(95 390) rotate(18) scale(.78)"/>
+      <use href="#paw-print" transform="translate(902 430) rotate(-22) scale(1.1)"/>
+      <use href="#paw-print" transform="translate(95 680) rotate(-16) scale(.92)"/>
+      <use href="#paw-print" transform="translate(884 720) rotate(16) scale(.84)"/>
+      <use href="#paw-print" transform="translate(300 830) rotate(-12) scale(.72)"/>
+      <use href="#paw-print" transform="translate(700 830) rotate(18) scale(.76)"/>
+    </svg>
+    <header class="hero-panel">
+      <div class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><span id="brand-fallback">✳</span><img class="brand-logo" id="brand-logo" alt=""></span>
+          <span class="brand-name">PROJECTEDU</span>
+        </div>
+        <div class="header-tools">
+          <span class="top-note">A little space for what you want to say.</span>
+          <select class="font-select" id="font-select" aria-label="Choose font style" title="Choose font style">
+            <option value="modern">Modern</option>
+            <option value="classic">Classic</option>
+            <option value="friendly">Friendly</option>
+            <option value="typewriter">Typewriter</option>
+          </select>
+          <div class="logo-controls">
+            <input class="logo-file-input" id="logo-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Choose a logo image">
+            <button class="logo-upload" id="logo-upload" type="button">Add your logo</button>
+            <button class="logo-remove" id="logo-remove" type="button" aria-label="Remove uploaded logo">Remove</button>
+          </div>
+        </div>
+      </div>
+      <section class="intro" aria-labelledby="page-title">
+        <span class="eyebrow" id="intro-eyebrow">Your words, your way</span>
+        <h1 id="page-title">Some things are better<br>put into words.</h1>
+        <p>Write a note, a thank-you, an apology, or anything in between.<br>Take your time. Make it yours.</p>
+        <hr class="intro-divider" aria-hidden="true">
+      </section>
+    </header>
+
+    <main>
+      <section class="workspace" aria-label="Letter writing workspace">
+        <section class="card form-card" aria-labelledby="compose-heading">
+          <div class="card-heading">
+            <h2 id="compose-heading">Write your message</h2>
+            <span class="step">01 &nbsp; Compose</span>
+          </div>
+          <form class="form-body" id="letter-form">
+            <div class="field">
+              <label for="kind">What are you writing?</label>
+              <select id="kind" name="kind">
+                <option value="A little note">A little note</option>
+                <option value="A thank-you">A thank-you</option>
+                <option value="A love letter">A love letter</option>
+                <option value="An apology">An apology</option>
+                <option value="A celebration">A celebration</option>
+                <option value="A just-because message">A just-because message</option>
+                <option value="Something else">Something else</option>
+              </select>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="recipient">To</label>
+                <input id="recipient" name="recipient" type="text" maxlength="120" placeholder="Someone special" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="subject">A few words up top</label>
+                <input id="subject" name="subject" type="text" maxlength="200" placeholder="A reason to smile" autocomplete="off">
+              </div>
+            </div>
+            <div class="field">
+              <div class="message-label">
+                <label for="message">Your message</label>
+                <span class="counter" id="counter" aria-live="polite">0 words</span>
+              </div>
+              <textarea id="message" name="message" maxlength="3000" placeholder="Start anywhere. It doesn't have to be perfect — it just has to be yours." spellcheck="true"></textarea>
+            </div>
+            <section class="ai-helper" aria-labelledby="ai-helper-heading">
+              <h3 class="ai-helper-heading" id="ai-helper-heading">A little help with your words</h3>
+              <p class="ai-helper-description">Get a polished suggestion from AI. Your original message stays untouched until you choose to use it.</p>
+              <div class="ai-helper-options">
+                <label for="ai-tone">Writing tone
+                  <select id="ai-tone">
+                    <option value="warm">Warm</option>
+                    <option value="heartfelt">Heartfelt</option>
+                    <option value="playful">Playful</option>
+                    <option value="professional">Professional</option>
+                    <option value="gentle">Gentle and thoughtful</option>
+                  </select>
+                </label>
+                <label for="ai-guidance">Optional guidance
+                  <input id="ai-guidance" type="text" maxlength="240" placeholder="e.g. Keep it short and mention our trip">
+                </label>
+              </div>
+              <button class="button button-secondary" type="button" id="ai-improve-button"><span class="button-icon" aria-hidden="true">✦</span>Polish with AI</button>
+              <p class="ai-status" id="ai-status" role="status" aria-live="polite"></p>
+              <div class="ai-result" id="ai-result" hidden>
+                <span class="ai-result-label">Suggested version</span>
+                <div class="ai-result-text" id="ai-result-text"></div>
+                <div class="ai-result-actions">
+                  <button class="button button-primary" type="button" id="ai-use-button">Use this version</button>
+                  <button class="button button-quiet" type="button" id="ai-dismiss-button">Keep mine</button>
+                </div>
+              </div>
+            </section>
+            <div class="actions">
+              <button class="button button-primary" type="button" id="save-button"><span class="button-icon" aria-hidden="true">♡</span>Save draft</button>
+              <button class="button button-secondary" type="button" id="copy-button"><span class="button-icon" aria-hidden="true">▢</span>Copy message</button>
+              <button class="button button-quiet" type="button" id="print-button">Print</button>
+              <button class="button button-quiet" type="reset">Start fresh</button>
+            </div>
+            <section class="receiver-link-panel" aria-labelledby="receiver-link-heading">
+              <h3 class="receiver-link-heading" id="receiver-link-heading">Send a link to your letter</h3>
+              <p class="receiver-link-description">Create a link that opens this letter for its recipient, with their own reaction buttons. Anyone with the link can read it, so avoid sharing sensitive details.</p>
+              <div class="receiver-link-actions">
+                <button class="button button-secondary" id="create-receiver-link" type="button"><span class="button-icon" aria-hidden="true">↗</span>Create receiver link</button>
+              </div>
+              <div class="receiver-link-result" id="receiver-link-result" hidden>
+                <input class="receiver-link-input" id="receiver-link-input" type="text" readonly aria-label="Shareable recipient link">
+                <button class="button button-primary" id="copy-receiver-link" type="button">Copy link</button>
+              </div>
+              <a class="receiver-link-anchor" id="open-receiver-link" hidden target="_blank" rel="noopener noreferrer">Open the recipient view</a>
+              <p class="receiver-link-status" id="receiver-link-status" role="status" aria-live="polite"></p>
+            </section>
+            <section class="share-panel" aria-labelledby="share-heading">
+              <h3 class="share-heading" id="share-heading">Share your letter</h3>
+              <p class="share-description">WhatsApp opens with your message ready. Instagram and TikTok use your device’s share options. Facebook needs a published website link to share.</p>
+              <div class="share-buttons">
+                <a class="share-button share-whatsapp" id="share-whatsapp" href="https://wa.me/" target="_blank" rel="noopener noreferrer">
+                  <span class="share-symbol" aria-hidden="true">◉</span>WhatsApp
+                </a>
+                <button class="share-button share-instagram" type="button" data-share-platform="Instagram">
+                  <span class="share-symbol" aria-hidden="true">◎</span>Instagram
+                </button>
+                <button class="share-button share-tiktok" type="button" data-share-platform="TikTok">
+                  <span class="share-symbol" aria-hidden="true">♪</span>TikTok
+                </button>
+                <button class="share-button share-facebook" type="button" id="share-facebook">
+                  <span class="share-symbol" aria-hidden="true">f</span>Facebook
+                </button>
+              </div>
+              <p class="share-status" id="share-status" role="status" aria-live="polite"></p>
+            </section>
+          </form>
+        </section>
+
+        <section class="card preview-card" aria-labelledby="preview-heading">
+          <div class="card-heading">
+            <h2 id="preview-heading">Your letter</h2>
+            <span class="step">02 &nbsp; A little preview</span>
+          </div>
+          <div class="preview-wrap">
+            <div class="letter-tools" aria-label="Choose a decorative sticker">
+              <span class="letter-tools-label">Add a little sticker</span>
+              <div class="sticker-list" role="group" aria-label="Letter stickers">
+                <button class="sticker-button" type="button" data-sticker="💌" aria-label="Love note sticker" aria-pressed="true">💌</button>
+                <button class="sticker-button" type="button" data-sticker="🐾" aria-label="Paw print sticker" aria-pressed="false">🐾</button>
+                <button class="sticker-button" type="button" data-sticker="🌷" aria-label="Tulip sticker" aria-pressed="false">🌷</button>
+                <button class="sticker-button" type="button" data-sticker="✨" aria-label="Sparkles sticker" aria-pressed="false">✨</button>
+                <button class="sticker-button" type="button" data-sticker="🐱" aria-label="Cat sticker" aria-pressed="false">🐱</button>
+              </div>
+            </div>
+            <article class="letter" aria-label="Live message preview">
+              <span class="letter-sticker" id="letter-sticker" aria-hidden="true">💌</span>
+              <svg class="letter-rose letter-rose-top" viewBox="0 0 64 76" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M30 43c-4 13-2 22 2 29m2-15c-11-1-17 3-20 8 10 1 17-1 20-8Zm1-7c9-7 17-6 22-2-8 6-15 8-22 2Z" fill="#658762" stroke="#4c704e" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M32 42c-13-5-15-17-5-22-3-10 10-15 16-7 10-4 18 7 11 15 1 11-10 19-22 14Z" fill="#d88cab" stroke="#9d4b72" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M35 18c6-2 11 3 8 8-2 4-7 5-8 10-7-2-9-8-5-12-2-3 1-6 5-6Z" fill="#f1c3d3" stroke="#a75076" stroke-linejoin="round" stroke-width="1.5"/>
+              </svg>
+              <svg class="letter-rose letter-rose-bottom" viewBox="0 0 64 76" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M30 43c-4 13-2 22 2 29m2-15c-11-1-17 3-20 8 10 1 17-1 20-8Zm1-7c9-7 17-6 22-2-8 6-15 8-22 2Z" fill="#658762" stroke="#4c704e" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M32 42c-13-5-15-17-5-22-3-10 10-15 16-7 10-4 18 7 11 15 1 11-10 19-22 14Z" fill="#d88cab" stroke="#9d4b72" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M35 18c6-2 11 3 8 8-2 4-7 5-8 10-7-2-9-8-5-12-2-3 1-6 5-6Z" fill="#f1c3d3" stroke="#a75076" stroke-linejoin="round" stroke-width="1.5"/>
+              </svg>
+              <span class="floating-heart heart-one" aria-hidden="true">♥</span>
+              <span class="floating-heart heart-two" aria-hidden="true">♥</span>
+              <span class="floating-heart heart-three" aria-hidden="true">♥</span>
+              <img class="letter-cat" src="cat-background.jpg" alt="" aria-hidden="true">
+              <time class="letter-date" id="letter-date"></time>
+              <div class="letter-to" id="letter-to">To someone special,</div>
+              <h3 class="letter-title" id="letter-title">A reason to smile</h3>
+              <p class="letter-message" id="letter-message">Your words will find their way here.</p>
+              <div class="letter-signoff" aria-label="With care, from you"></div>
+            </article>
+            <div class="letter-footer">
+              <span id="preview-kind">A little note</span>
+              <span>Made with a little care</span>
+            </div>
+            <section class="reaction-box" aria-labelledby="reaction-heading">
+              <h3 class="reaction-heading" id="reaction-heading">How does this letter make you feel?</h3>
+              <div class="reaction-list" role="group" aria-label="Choose an emoji reaction">
+                <button class="reaction-button" type="button" data-reaction="🥰" aria-label="Love it" aria-pressed="false">🥰</button>
+                <button class="reaction-button" type="button" data-reaction="❤️" aria-label="Send a heart" aria-pressed="false">❤️</button>
+                <button class="reaction-button" type="button" data-reaction="😊" aria-label="It made me smile" aria-pressed="false">😊</button>
+                <button class="reaction-button" type="button" data-reaction="🐱" aria-label="Cat reaction" aria-pressed="false">🐱</button>
+                <button class="reaction-button" type="button" data-reaction="✨" aria-label="Send sparkles" aria-pressed="false">✨</button>
+              </div>
+              <p class="reaction-status" id="reaction-status" aria-live="polite">Pick an emoji to leave a little reaction.</p>
+            </section>
+            <section class="reply-panel" id="reply-panel" aria-labelledby="reply-heading" hidden>
+              <h3 class="reply-heading" id="reply-heading">Keep the conversation going</h3>
+              <p class="reply-description">Write a reply and create a return link to send back. The other person can open it and reply again. Links contain the conversation, so anyone with a link can read it.</p>
+              <p class="reply-empty" id="reply-empty">No replies yet. Your message will start the conversation.</p>
+              <div class="reply-thread" id="reply-thread" aria-label="Replies so far" hidden></div>
+              <div class="reply-fields">
+                <label for="reply-author">Your name
+                  <input id="reply-author" type="text" maxlength="120" autocomplete="name" placeholder="Who is replying?">
+                </label>
+                <label for="reply-message">Your reply
+                  <textarea id="reply-message" maxlength="3000" placeholder="Write a reply to this letter..."></textarea>
+                </label>
+              </div>
+              <button class="button button-primary" id="create-reply-link" type="button"><span class="button-icon" aria-hidden="true">↗</span>Create return link</button>
+              <div class="reply-result" id="reply-result" hidden>
+                <input class="reply-link-input" id="reply-link-input" type="text" readonly aria-label="Shareable return link">
+                <button class="button button-primary" id="copy-reply-link" type="button">Copy link</button>
+              </div>
+              <a class="reply-link-anchor" id="open-reply-link" hidden target="_blank" rel="noopener noreferrer">Open the updated conversation</a>
+              <p class="reply-status" id="reply-status" role="status" aria-live="polite"></p>
+            </section>
+          </div>
+        </section>
+      </section>
+      <p class="footer-note">No rush. The right words will come. ✿</p>
+      <nav class="site-legal-links" aria-label="Legal information">
+        <a href="home.html">Home</a>
+        <a href="technology.html">Tech stack</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+      </nav>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <button class="chat-toggle" id="chat-toggle" type="button" aria-controls="chat-panel" aria-expanded="false">✦ Help & AI chat</button>
+  <section class="chat-panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title" hidden>
+    <header class="chat-header">
+      <div>
+        <h2 class="chat-title" id="chat-title">PROJECTEDU assistant</h2>
+        <p class="chat-subtitle">Ask for help with your letters or the website.</p>
+      </div>
+      <button class="chat-close" id="chat-close" type="button" aria-label="Close chat">×</button>
+    </header>
+    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions text">
+      <div class="chat-message" data-role="assistant">Hi! I can help you use PROJECTEDU, write a thoughtful message, or exchange reply links. What would you like help with?</div>
+    </div>
+    <form class="chat-compose" id="chat-form">
+      <textarea class="chat-input" id="chat-input" maxlength="2000" rows="2" aria-label="Your message to the AI assistant" placeholder="Type your question..." required></textarea>
+      <button class="button button-primary chat-send" id="chat-send" type="submit">Send</button>
+    </form>
+    <p class="chat-status" id="chat-status" role="status" aria-live="polite"></p>
+  </section>
+
+  <script>
+    (() => {
+      const form = document.getElementById("letter-form");
+      const fields = {
+        kind: document.getElementById("kind"),
+        recipient: document.getElementById("recipient"),
+        subject: document.getElementById("subject"),
+        message: document.getElementById("message")
+      };
+      const preview = {
+        recipient: document.getElementById("letter-to"),
+        subject: document.getElementById("letter-title"),
+        message: document.getElementById("letter-message"),
+        kind: document.getElementById("preview-kind"),
+        date: document.getElementById("letter-date")
+      };
+      const toast = document.getElementById("toast");
+      const storageKey = "little-letters-draft";
+      const logoStorageKey = "projectedu-logo";
+      const logoInput = document.getElementById("logo-input");
+      const logoImage = document.getElementById("brand-logo");
+      const logoFallback = document.getElementById("brand-fallback");
+      const logoUploadButton = document.getElementById("logo-upload");
+      const logoRemoveButton = document.getElementById("logo-remove");
+      const fontSelect = document.getElementById("font-select");
+      const fontStorageKey = "projectedu-font-style";
+      const stickerPreview = document.getElementById("letter-sticker");
+      const reactionStatus = document.getElementById("reaction-status");
+      const aiButton = document.getElementById("ai-improve-button");
+      const aiStatus = document.getElementById("ai-status");
+      const aiResult = document.getElementById("ai-result");
+      const aiResultText = document.getElementById("ai-result-text");
+      const aiUseButton = document.getElementById("ai-use-button");
+      const aiDismissButton = document.getElementById("ai-dismiss-button");
+      const chatToggle = document.getElementById("chat-toggle");
+      const chatPanel = document.getElementById("chat-panel");
+      const chatMessages = document.getElementById("chat-messages");
+      const chatForm = document.getElementById("chat-form");
+      const chatInput = document.getElementById("chat-input");
+      const chatSend = document.getElementById("chat-send");
+      const chatStatus = document.getElementById("chat-status");
+      const shareStatus = document.getElementById("share-status");
+      const receiverLinkResult = document.getElementById("receiver-link-result");
+      const receiverLinkInput = document.getElementById("receiver-link-input");
+      const receiverLinkAnchor = document.getElementById("open-receiver-link");
+      const receiverLinkStatus = document.getElementById("receiver-link-status");
+      const replyPanel = document.getElementById("reply-panel");
+      const replyAuthor = document.getElementById("reply-author");
+      const replyMessage = document.getElementById("reply-message");
+      const replyThread = document.getElementById("reply-thread");
+      const replyEmpty = document.getElementById("reply-empty");
+      const replyResult = document.getElementById("reply-result");
+      const replyLinkInput = document.getElementById("reply-link-input");
+      const replyLinkAnchor = document.getElementById("open-reply-link");
+      const replyStatus = document.getElementById("reply-status");
+      const maxReceiverLinkLength = 20000;
+      let toastTimer;
+      let improvedMessage = "";
+      let receiverMode = false;
+      let receiverConversation = null;
+      const chatHistory = [];
+
+      function displayLogo(dataUrl) {
+        logoImage.src = dataUrl;
+        logoImage.style.display = "block";
+        logoFallback.style.display = "none";
+        logoUploadButton.textContent = "Change logo";
+        logoRemoveButton.style.display = "inline-block";
+      }
+
+      function removeLogo() {
+        logoImage.removeAttribute("src");
+        logoImage.style.display = "none";
+        logoFallback.style.display = "inline";
+        logoUploadButton.textContent = "Add your logo";
+        logoRemoveButton.style.display = "none";
+      }
+
+      preview.date.textContent = new Intl.DateTimeFormat(undefined, {
+        month: "long", day: "numeric", year: "numeric"
+      }).format(new Date());
+
+      function updatePreview() {
+        const recipient = fields.recipient.value.trim();
+        const subject = fields.subject.value.trim();
+        const message = fields.message.value;
+        preview.recipient.textContent = `To ${recipient || "someone special"},`;
+        preview.subject.textContent = subject || "A reason to smile";
+        preview.message.textContent = message || "Your words will find their way here.";
+        preview.kind.textContent = fields.kind.value;
+        const words = message.trim() ? message.trim().split(/\s+/).length : 0;
+        document.getElementById("counter").textContent = `${words} ${words === 1 ? "word" : "words"}`;
+      }
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("visible");
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.remove("visible"), 2600);
+      }
+
+      function currentDraft() {
+        return {
+          kind: fields.kind.value,
+          recipient: fields.recipient.value,
+          subject: fields.subject.value,
+          message: fields.message.value
+        };
+      }
+
+      function encodeReceiverLetter(letter) {
+        const bytes = new TextEncoder().encode(JSON.stringify(letter));
+        let binary = "";
+        for (const byte of bytes) binary += String.fromCharCode(byte);
+        return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+      }
+
+      function decodeReceiverLetter(encoded) {
+        if (!encoded || encoded.length > maxReceiverLinkLength) return null;
+        const base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
+        const binary = atob(base64 + "=".repeat((4 - base64.length % 4) % 4));
+        const bytes = Uint8Array.from(binary, character => character.charCodeAt(0));
+        const payload = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
+        const letter = payload && payload.version === 2 ? payload.letter : payload;
+        const allowedKinds = Array.from(fields.kind.options, option => option.value);
+        const allowedStickers = Array.from(document.querySelectorAll(".sticker-button"), button => button.dataset.sticker);
+        if (!letter || letter.version !== 1
+          || typeof letter.message !== "string" || !letter.message.trim() || letter.message.length > 3000
+          || typeof letter.recipient !== "string" || letter.recipient.length > 120
+          || typeof letter.subject !== "string" || letter.subject.length > 200
+          || typeof letter.kind !== "string" || !allowedKinds.includes(letter.kind)
+          || typeof letter.sticker !== "string" || !allowedStickers.includes(letter.sticker)
+          || typeof letter.date !== "string" || !Number.isFinite(Date.parse(letter.date))) {
+          return null;
+        }
+        const replies = payload.version === 2 ? payload.replies : [];
+        if (payload.version !== 1 && payload.version !== 2) return null;
+        if (!Array.isArray(replies) || replies.length > 20
+          || replies.some(reply => !reply || typeof reply.author !== "string" || !reply.author.trim()
+            || reply.author.length > 120
+            || typeof reply.message !== "string" || !reply.message.trim() || reply.message.length > 3000
+            || typeof reply.date !== "string" || !Number.isFinite(Date.parse(reply.date)))) {
+          return null;
+        }
+        return { letter, replies };
+      }
+
+      function renderConversationReplies(replies) {
+        replyThread.replaceChildren();
+        replyEmpty.hidden = replies.length > 0;
+        replyThread.hidden = replies.length === 0;
+        replies.forEach(reply => {
+          const message = document.createElement("article");
+          message.className = "reply-message";
+          const author = document.createElement("p");
+          author.className = "reply-message-author";
+          author.textContent = `${reply.author} · ${new Intl.DateTimeFormat(undefined, {
+            month: "short", day: "numeric", year: "numeric"
+          }).format(new Date(reply.date))}`;
+          const body = document.createElement("p");
+          body.className = "reply-message-body";
+          body.textContent = reply.message;
+          message.append(author, body);
+          replyThread.append(message);
+        });
+      }
+
+      function enterRecipientMode(conversation) {
+        const letter = conversation.letter;
+        receiverMode = true;
+        receiverConversation = conversation;
+        replyPanel.hidden = false;
+        document.body.classList.add("recipient-mode");
+        fields.kind.value = letter.kind;
+        fields.recipient.value = letter.recipient;
+        fields.subject.value = letter.subject;
+        fields.message.value = letter.message;
+        stickerPreview.textContent = letter.sticker;
+        document.querySelectorAll(".sticker-button").forEach(button => {
+          button.setAttribute("aria-pressed", String(button.dataset.sticker === letter.sticker));
+        });
+        preview.date.textContent = new Intl.DateTimeFormat(undefined, {
+          month: "long", day: "numeric", year: "numeric"
+        }).format(new Date(letter.date));
+        document.getElementById("page-title").innerHTML = "A little letter,<br>just for you.";
+        document.getElementById("intro-eyebrow").textContent = "Someone sent you a little note";
+        document.querySelector(".intro p").innerHTML = "Take a moment to enjoy this message.<br>Your reaction stays on this device.";
+        document.getElementById("preview-heading").textContent = "A letter just for you";
+        document.querySelector(".preview-card .step").textContent = "A little something from someone special";
+        document.getElementById("reaction-heading").textContent = "Leave a little reaction";
+        document.getElementById("reaction-status").textContent = "Pick an emoji to leave a little reaction.";
+        document.querySelectorAll(".reaction-button").forEach(button => button.setAttribute("aria-pressed", "false"));
+        renderConversationReplies(conversation.replies);
+        updatePreview();
+      }
+
+      function readReceiverLetterFromUrl() {
+        if (!window.location.hash.startsWith("#letter=")) return false;
+        try {
+          const conversation = decodeReceiverLetter(window.location.hash.slice("#letter=".length));
+          if (!conversation) throw new Error("This recipient link is invalid or has been changed.");
+          enterRecipientMode(conversation);
+          return true;
+        } catch (error) {
+          console.error("Could not open the recipient letter.", error);
+          receiverLinkStatus.dataset.state = "error";
+          receiverLinkStatus.textContent = "This receiver link is invalid or incomplete.";
+          window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+          return false;
+        }
+      }
+
+      function getShareText() {
+        const recipient = fields.recipient.value.trim();
+        const subject = fields.subject.value.trim();
+        const message = fields.message.value.trim();
+        if (!message) return "";
+        return [
+          `To ${recipient || "someone special"},`,
+          "",
+          subject || fields.kind.value,
+          "",
+          message,
+          "",
+          "With care 💜"
+        ].join("\n");
+      }
+
+      async function copyShareText(text, platform) {
+        try {
+          await navigator.clipboard.writeText(text);
+          shareStatus.dataset.state = "success";
+          shareStatus.textContent = `Letter copied. Open ${platform} and paste it into a message or caption.`;
+        } catch (error) {
+          console.error(`Could not copy the letter for ${platform}.`, error);
+          shareStatus.dataset.state = "error";
+          shareStatus.textContent = `Couldn't open sharing or copy the letter for ${platform}. Try the Copy message button instead.`;
+        }
+      }
+
+      document.getElementById("share-whatsapp").addEventListener("click", event => {
+        const text = getShareText();
+        if (!text) {
+          event.preventDefault();
+          shareStatus.dataset.state = "error";
+          shareStatus.textContent = "Write your message first, then you can share it.";
+          fields.message.focus();
+          return;
+        }
+        event.currentTarget.href = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        shareStatus.dataset.state = "success";
+        shareStatus.textContent = "Opening WhatsApp with your letter ready to send.";
+      });
+
+      document.getElementById("create-receiver-link").addEventListener("click", () => {
+        const message = fields.message.value.trim();
+        if (!message) {
+          receiverLinkStatus.dataset.state = "error";
+          receiverLinkStatus.textContent = "Write your message first, then create a receiver link.";
+          fields.message.focus();
+          return;
+        }
+        if (message.length > 3000) {
+          receiverLinkStatus.dataset.state = "error";
+          receiverLinkStatus.textContent = "Keep the message under 3,000 characters so it fits in a shareable link.";
+          fields.message.focus();
+          return;
+        }
+
+        const letter = {
+          version: 1,
+          ...currentDraft(),
+          message,
+          sticker: stickerPreview.textContent,
+          date: new Date().toISOString()
+        };
+        try {
+          const receiverUrl = new URL(window.location.href);
+          receiverUrl.hash = `letter=${encodeReceiverLetter(letter)}`;
+          receiverLinkInput.value = receiverUrl.href;
+          receiverLinkAnchor.href = receiverUrl.href;
+          receiverLinkResult.hidden = false;
+          receiverLinkAnchor.hidden = false;
+          receiverLinkStatus.dataset.state = "success";
+          const isPublicHttpsPage = receiverUrl.protocol === "https:"
+            && !["localhost", "127.0.0.1", "::1"].includes(receiverUrl.hostname);
+          receiverLinkStatus.textContent = isPublicHttpsPage
+            ? "Link ready. Copy it or open the recipient view to check it."
+            : "Link ready for testing here. Publish the site at a public address so your recipient can open it.";
+        } catch (error) {
+          console.error("Could not create the recipient link.", error);
+          receiverLinkStatus.dataset.state = "error";
+          receiverLinkStatus.textContent = "Could not create the receiver link. Please try again.";
+        }
+      });
+
+      document.getElementById("copy-receiver-link").addEventListener("click", async () => {
+        if (!receiverLinkInput.value) return;
+        try {
+          await navigator.clipboard.writeText(receiverLinkInput.value);
+          receiverLinkStatus.dataset.state = "success";
+          receiverLinkStatus.textContent = "Receiver link copied. Send it to the recipient.";
+        } catch (error) {
+          console.error("Could not copy the recipient link automatically.", error);
+          receiverLinkInput.focus();
+          receiverLinkInput.select();
+          receiverLinkStatus.dataset.state = "error";
+          receiverLinkStatus.textContent = "Couldn't copy automatically. The link is selected—press Ctrl+C to copy it.";
+        }
+      });
+
+      document.getElementById("create-reply-link").addEventListener("click", () => {
+        const author = replyAuthor.value.trim();
+        const message = replyMessage.value.trim();
+        if (!author || !message) {
+          replyStatus.dataset.state = "error";
+          replyStatus.textContent = "Add your name and reply before creating a return link.";
+          (!author ? replyAuthor : replyMessage).focus();
+          return;
+        }
+        if (message.length > 3000) {
+          replyStatus.dataset.state = "error";
+          replyStatus.textContent = "Keep each reply under 3,000 characters so it fits in a shareable link.";
+          replyMessage.focus();
+          return;
+        }
+        if (!receiverConversation || receiverConversation.replies.length >= 20) {
+          replyStatus.dataset.state = "error";
+          replyStatus.textContent = "This conversation has reached its reply limit. Start a new letter to continue.";
+          return;
+        }
+
+        const reply = { author, message, date: new Date().toISOString() };
+        const updatedConversation = {
+          letter: receiverConversation.letter,
+          replies: [...receiverConversation.replies, reply]
+        };
+        try {
+          const encoded = encodeReceiverLetter({
+            version: 2,
+            letter: updatedConversation.letter,
+            replies: updatedConversation.replies
+          });
+          if (encoded.length > maxReceiverLinkLength) {
+            replyStatus.dataset.state = "error";
+            replyStatus.textContent = "This conversation is too long to share as a link. Start a new letter to continue.";
+            return;
+          }
+          const replyUrl = new URL(window.location.href);
+          replyUrl.hash = `letter=${encoded}`;
+          replyLinkInput.value = replyUrl.href;
+          replyLinkAnchor.href = replyUrl.href;
+          replyResult.hidden = false;
+          replyLinkAnchor.hidden = false;
+          receiverConversation = updatedConversation;
+          renderConversationReplies(updatedConversation.replies);
+          replyMessage.value = "";
+          replyStatus.dataset.state = "success";
+          replyStatus.textContent = "Return link ready. Copy it and send it to the other person so they can continue the conversation.";
+        } catch (error) {
+          console.error("Could not create a return link.", error);
+          replyStatus.dataset.state = "error";
+          replyStatus.textContent = "Could not create the return link. Please try again.";
+        }
+      });
+
+      document.getElementById("copy-reply-link").addEventListener("click", async () => {
+        if (!replyLinkInput.value) return;
+        try {
+          await navigator.clipboard.writeText(replyLinkInput.value);
+          replyStatus.dataset.state = "success";
+          replyStatus.textContent = "Return link copied. Send it to the other person to continue the conversation.";
+        } catch (error) {
+          console.error("Could not copy the return link automatically.", error);
+          replyLinkInput.focus();
+          replyLinkInput.select();
+          replyStatus.dataset.state = "error";
+          replyStatus.textContent = "Couldn't copy automatically. The link is selected—press Ctrl+C to copy it.";
+        }
+      });
+
+      [replyAuthor, replyMessage].forEach(field => field.addEventListener("input", () => {
+        if (replyResult.hidden) return;
+        replyResult.hidden = true;
+        replyLinkAnchor.hidden = true;
+        replyStatus.dataset.state = "";
+        replyStatus.textContent = "Reply updated. Create a fresh return link to share these changes.";
+      }));
+
+      Object.values(fields).forEach(field => field.addEventListener("input", () => {
+        if (receiverMode || receiverLinkResult.hidden) return;
+        receiverLinkResult.hidden = true;
+        receiverLinkAnchor.hidden = true;
+        receiverLinkStatus.dataset.state = "";
+        receiverLinkStatus.textContent = "Letter updated. Create a fresh receiver link to share these changes.";
+      }));
+      fields.kind.addEventListener("change", () => {
+        if (receiverMode || receiverLinkResult.hidden) return;
+        receiverLinkResult.hidden = true;
+        receiverLinkAnchor.hidden = true;
+        receiverLinkStatus.dataset.state = "";
+        receiverLinkStatus.textContent = "Letter updated. Create a fresh receiver link to share these changes.";
+      });
+      document.querySelectorAll(".sticker-button").forEach(button => button.addEventListener("click", () => {
+        if (receiverMode || receiverLinkResult.hidden) return;
+        receiverLinkResult.hidden = true;
+        receiverLinkAnchor.hidden = true;
+        receiverLinkStatus.dataset.state = "";
+        receiverLinkStatus.textContent = "Sticker updated. Create a fresh receiver link to share this version.";
+      }));
+
+      document.querySelectorAll("[data-share-platform]").forEach(button => {
+        button.addEventListener("click", async () => {
+          const platform = button.dataset.sharePlatform;
+          const text = getShareText();
+          if (!text) {
+            shareStatus.dataset.state = "error";
+            shareStatus.textContent = "Write your message first, then you can share it.";
+            fields.message.focus();
+            return;
+          }
+          if (typeof navigator.share !== "function") {
+            await copyShareText(text, platform);
+            return;
+          }
+          try {
+            await navigator.share({ title: fields.subject.value.trim() || "A little letter", text });
+            shareStatus.dataset.state = "success";
+            shareStatus.textContent = `Share options opened for your letter. Choose ${platform} if it is available.`;
+          } catch (error) {
+            if (error.name === "AbortError") return;
+            console.error(`Could not open sharing options for ${platform}.`, error);
+            await copyShareText(text, platform);
+          }
+        });
+      });
+
+      document.getElementById("share-facebook").addEventListener("click", async () => {
+        const text = getShareText();
+        if (!text) {
+          shareStatus.dataset.state = "error";
+          shareStatus.textContent = "Write your message first, then you can share it.";
+          fields.message.focus();
+          return;
+        }
+
+        const isPublicHttpsPage = window.location.protocol === "https:"
+          && !["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+        if (isPublicHttpsPage) {
+          const shareUrl = new URL("https://www.facebook.com/sharer/sharer.php");
+          shareUrl.searchParams.set("u", window.location.href);
+          shareUrl.searchParams.set("quote", text);
+          window.open(shareUrl.href, "_blank", "noopener,noreferrer");
+          shareStatus.dataset.state = "success";
+          shareStatus.textContent = "Opening Facebook’s share window.";
+          return;
+        }
+
+        await copyShareText(text, "Facebook");
+        if (shareStatus.dataset.state === "success") {
+          shareStatus.textContent = "Letter copied. Publish your website online to share a working link on Facebook.";
+        }
+      });
+
+      function restoreDraft(draft) {
+        if (!draft || typeof draft !== "object") return;
+        if (typeof draft.kind === "string" && Array.from(fields.kind.options).some(option => option.value === draft.kind)) fields.kind.value = draft.kind;
+        if (typeof draft.recipient === "string") fields.recipient.value = draft.recipient;
+        if (typeof draft.subject === "string") fields.subject.value = draft.subject;
+        if (typeof draft.message === "string") fields.message.value = draft.message;
+        updatePreview();
+      }
+
+      function invalidateAiSuggestion() {
+        if (aiResult.hidden) return;
+        improvedMessage = "";
+        aiResult.hidden = true;
+        aiStatus.dataset.state = "";
+        aiStatus.textContent = "Your writing details changed. Request a fresh suggestion.";
+      }
+
+      Object.values(fields).forEach(field => field.addEventListener("input", updatePreview));
+      fields.kind.addEventListener("change", updatePreview);
+      Object.values(fields).forEach(field => {
+        field.addEventListener("input", invalidateAiSuggestion);
+        field.addEventListener("change", invalidateAiSuggestion);
+      });
+      document.getElementById("ai-tone").addEventListener("change", invalidateAiSuggestion);
+      document.getElementById("ai-guidance").addEventListener("input", invalidateAiSuggestion);
+
+      function addChatMessage(role, content) {
+        const message = document.createElement("div");
+        message.className = "chat-message";
+        message.dataset.role = role;
+        message.textContent = content;
+        chatMessages.append(message);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return message;
+      }
+
+      function setChatOpen(isOpen) {
+        chatPanel.hidden = !isOpen;
+        chatToggle.setAttribute("aria-expanded", String(isOpen));
+        if (isOpen) chatInput.focus();
+        else chatToggle.focus();
+      }
+
+      chatToggle.addEventListener("click", () => setChatOpen(chatPanel.hidden));
+      document.getElementById("chat-close").addEventListener("click", () => setChatOpen(false));
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && !chatPanel.hidden) setChatOpen(false);
+      });
+      chatInput.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          chatForm.requestSubmit();
+        }
+      });
+      chatForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        const content = chatInput.value.trim();
+        if (!content || chatSend.disabled) return;
+
+        chatHistory.push({ role: "user", content });
+        addChatMessage("user", content);
+        chatInput.value = "";
+        chatSend.disabled = true;
+        chatStatus.dataset.state = "loading";
+        chatStatus.textContent = "The assistant is thinking…";
+
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages: chatHistory.slice(-4) })
+          });
+          let result;
+          try {
+            result = await response.json();
+          } catch (error) {
+            throw new Error("The AI assistant returned an unreadable response.");
+          }
+          if (!response.ok) {
+            throw new Error(typeof result.error === "string" ? result.error : "The AI assistant couldn't reply.");
+          }
+          if (typeof result.message !== "string" || !result.message.trim()) {
+            throw new Error("The AI assistant returned an empty reply. Please try again.");
+          }
+          const answer = result.message.trim();
+          chatHistory.push({ role: "assistant", content: answer });
+          addChatMessage("assistant", answer);
+          chatStatus.dataset.state = "";
+          chatStatus.textContent = "";
+        } catch (error) {
+          console.error("Could not get an AI assistant reply.", error);
+          addChatMessage("error", "I couldn't answer just now. Please try again.");
+          chatStatus.dataset.state = "error";
+          chatStatus.textContent = error instanceof TypeError
+            ? "Can't reach the AI service. Start the local server and check that it has an API key."
+            : error.message;
+          const lastChatMessage = chatHistory[chatHistory.length - 1];
+          if (lastChatMessage && lastChatMessage.role === "user" && lastChatMessage.content === content) chatHistory.pop();
+          chatInput.value = content;
+          chatInput.focus();
+        } finally {
+          chatSend.disabled = false;
+        }
+      });
+
+      aiButton.addEventListener("click", async () => {
+        const message = fields.message.value.trim();
+        if (!message) {
+          aiStatus.dataset.state = "error";
+          aiStatus.textContent = "Write a message first, then AI can help polish it.";
+          fields.message.focus();
+          return;
+        }
+
+        aiButton.disabled = true;
+        aiStatus.dataset.state = "loading";
+        aiStatus.textContent = "Polishing your words…";
+        aiResult.hidden = true;
+        const request = {
+          message,
+          recipient: fields.recipient.value.trim(),
+          subject: fields.subject.value.trim(),
+          kind: fields.kind.value,
+          tone: document.getElementById("ai-tone").value,
+          guidance: document.getElementById("ai-guidance").value.trim()
+        };
+
+        try {
+          const response = await fetch("/api/improve", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request)
+          });
+          let result;
+          try {
+            result = await response.json();
+          } catch (error) {
+            throw new Error("The AI service returned an unreadable response.");
+          }
+          if (!response.ok) {
+            throw new Error(typeof result.error === "string" ? result.error : "The AI service couldn't polish your message.");
+          }
+          if (typeof result.message !== "string" || !result.message.trim()) {
+            throw new Error("The AI service returned an empty suggestion. Please try again.");
+          }
+          const currentRequest = {
+            message: fields.message.value.trim(),
+            recipient: fields.recipient.value.trim(),
+            subject: fields.subject.value.trim(),
+            kind: fields.kind.value,
+            tone: document.getElementById("ai-tone").value,
+            guidance: document.getElementById("ai-guidance").value.trim()
+          };
+          if (JSON.stringify(currentRequest) !== JSON.stringify(request)) {
+            throw new Error("Your writing details changed while AI was working. Request a fresh suggestion.");
+          }
+          improvedMessage = result.message.trim();
+          aiResultText.textContent = improvedMessage;
+          aiResult.hidden = false;
+          aiStatus.dataset.state = "success";
+          aiStatus.textContent = "Your suggestion is ready. Review it before applying.";
+        } catch (error) {
+          console.error("Could not get an AI writing suggestion.", error);
+          aiStatus.dataset.state = "error";
+          aiStatus.textContent = error instanceof TypeError
+            ? "Can't reach the writing service. Start the local server and try again."
+            : error.message;
+        } finally {
+          aiButton.disabled = false;
+        }
+      });
+
+      aiUseButton.addEventListener("click", () => {
+        if (!improvedMessage) return;
+        fields.message.value = improvedMessage;
+        updatePreview();
+        aiStatus.dataset.state = "success";
+        aiStatus.textContent = "Polished message applied. You can still edit it.";
+        aiResult.hidden = true;
+      });
+
+      aiDismissButton.addEventListener("click", () => {
+        aiResult.hidden = true;
+        aiStatus.dataset.state = "";
+        aiStatus.textContent = "Your original message is unchanged.";
+      });
+
+      document.querySelectorAll(".sticker-button").forEach(button => {
+        button.addEventListener("click", () => {
+          stickerPreview.textContent = button.dataset.sticker;
+          document.querySelectorAll(".sticker-button").forEach(sticker => {
+            sticker.setAttribute("aria-pressed", String(sticker === button));
+          });
+        });
+      });
+
+      document.querySelectorAll(".reaction-button").forEach(button => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".reaction-button").forEach(reaction => {
+            reaction.setAttribute("aria-pressed", String(reaction === button));
+          });
+          reactionStatus.textContent = `Your ${button.dataset.reaction} reaction is selected on this device.`;
+        });
+      });
+
+      logoUploadButton.addEventListener("click", () => logoInput.click());
+      fontSelect.addEventListener("change", () => {
+        document.documentElement.dataset.fontStyle = fontSelect.value;
+        try {
+          window.localStorage.setItem(fontStorageKey, fontSelect.value);
+          showToast(`${fontSelect.options[fontSelect.selectedIndex].text} font selected.`);
+        } catch (error) {
+          console.error("Could not save the selected font style.", error);
+          showToast("Font changed, but couldn't be saved in this browser.");
+        }
+      });
+
+      logoInput.addEventListener("change", () => {
+        const file = logoInput.files && logoInput.files[0];
+        if (!file) return;
+
+        const supportedTypes = ["image/png", "image/jpeg", "image/webp", "image/gif"];
+        if (!supportedTypes.includes(file.type)) {
+          showToast("Choose a PNG, JPG, WebP, or GIF image.");
+          logoInput.value = "";
+          return;
+        }
+        if (file.size > 1024 * 1024) {
+          showToast("Please choose a logo smaller than 1 MB.");
+          logoInput.value = "";
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+          if (typeof reader.result !== "string") {
+            showToast("Couldn't read that logo. Please try another image.");
+            logoInput.value = "";
+            return;
+          }
+          try {
+            window.localStorage.setItem(logoStorageKey, reader.result);
+            displayLogo(reader.result);
+            showToast("Your logo is saved in this browser.");
+          } catch (error) {
+            console.error("Could not save the uploaded logo.", error);
+            showToast("Couldn't save your logo. Try a smaller image or check browser storage.");
+          } finally {
+            logoInput.value = "";
+          }
+        });
+        reader.addEventListener("error", () => {
+          console.error("Could not read the uploaded logo.", reader.error);
+          showToast("Couldn't read that logo. Please try another image.");
+          logoInput.value = "";
+        });
+        reader.readAsDataURL(file);
+      });
+
+      logoRemoveButton.addEventListener("click", () => {
+        try {
+          window.localStorage.removeItem(logoStorageKey);
+          removeLogo();
+          showToast("Your logo was removed from this browser.");
+        } catch (error) {
+          console.error("Could not remove the saved logo.", error);
+          showToast("Couldn't remove the saved logo. Check your browser storage settings.");
+        }
+      });
+
+      document.getElementById("save-button").addEventListener("click", () => {
+        try {
+          window.localStorage.setItem(storageKey, JSON.stringify(currentDraft()));
+          showToast("Your draft is saved on this device.");
+        } catch (error) {
+          console.error("Could not save the letter draft.", error);
+          showToast("Couldn't save your draft. Check your browser storage settings.");
+        }
+      });
+
+      document.getElementById("copy-button").addEventListener("click", async () => {
+        const draft = currentDraft();
+        const text = [
+          preview.date.textContent,
+          "",
+          `To ${draft.recipient.trim() || "someone special"},`,
+          "",
+          draft.subject.trim() || "A reason to smile",
+          "",
+          draft.message,
+          "",
+          "With care,"
+        ].join("\n");
+
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast("Your message is copied and ready to share.");
+        } catch (error) {
+          console.error("Could not copy the letter.", error);
+          showToast("Couldn't copy your message. Try selecting and copying it instead.");
+        }
+      });
+
+      document.getElementById("print-button").addEventListener("click", () => window.print());
+      form.addEventListener("reset", () => {
+        window.setTimeout(() => {
+          improvedMessage = "";
+          aiResult.hidden = true;
+          aiStatus.dataset.state = "";
+          aiStatus.textContent = "";
+          receiverLinkResult.hidden = true;
+          receiverLinkAnchor.hidden = true;
+          receiverLinkStatus.dataset.state = "";
+          receiverLinkStatus.textContent = "";
+          updatePreview();
+          showToast("A fresh page, just for you.");
+        }, 0);
+      });
+
+      try {
+        const savedLogo = window.localStorage.getItem(logoStorageKey);
+        if (savedLogo && /^data:image\/(?:png|jpeg|webp|gif);base64,/.test(savedLogo)) displayLogo(savedLogo);
+      } catch (error) {
+        console.error("Could not load the saved logo.", error);
+        showToast("Your saved logo couldn't be loaded.");
+      }
+
+      try {
+        const savedFont = window.localStorage.getItem(fontStorageKey);
+        if (savedFont && Array.from(fontSelect.options).some(option => option.value === savedFont)) {
+          fontSelect.value = savedFont;
+          document.documentElement.dataset.fontStyle = savedFont;
+        }
+      } catch (error) {
+        console.error("Could not load the saved font style.", error);
+        showToast("Your saved font choice couldn't be loaded.");
+      }
+
+      if (!readReceiverLetterFromUrl()) {
+        try {
+          const savedDraft = window.localStorage.getItem(storageKey);
+          if (savedDraft) restoreDraft(JSON.parse(savedDraft));
+        } catch (error) {
+          console.error("Could not load the saved letter draft.", error);
+          showToast("Your saved draft couldn't be loaded.");
+        }
+      }
+      updatePreview();
+    })();
+  </script>
+</body>
+</html>
