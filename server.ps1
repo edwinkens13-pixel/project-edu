@@ -103,7 +103,7 @@ function Get-OpenAiChatReply {
     $apiResponse = Invoke-RestMethod `
         -Uri "https://api.openai.com/v1/responses" `
         -Method Post `
-        -Headers @{ Authorization = "******" } `
+        -Headers @{ Authorization = "Bearer $ApiKey" } `
         -ContentType "application/json; charset=utf-8" `
         -Body ([System.Text.Encoding]::UTF8.GetBytes($requestBody)) `
         -TimeoutSec 45
@@ -156,7 +156,7 @@ function Send-StaticFile {
 try {
     $Listener.Start()
     Write-Host "PROJECTEDU is running at http://127.0.0.1:8000/"
-    Write-Host "Keep this window open while using the AI writing helper. Press Ctrl+C to stop."
+    Write-Host "Keep this window open while using the AI help desk and writing helper. Press Ctrl+C to stop."
 
     while ($Listener.IsListening) {
         $Context = $Listener.GetContext()
@@ -285,9 +285,10 @@ try {
             }
 
             switch ($path) {
-                "/" { Send-StaticFile $Context "home.html" }
+                "/" { Send-StaticFile $Context "index.html" }
                 "/home.html" { Send-StaticFile $Context "home.html" }
                 "/index.html" { Send-StaticFile $Context "index.html" }
+                "/letter.html" { Send-StaticFile $Context "letter.html" }
                 "/technology.html" { Send-StaticFile $Context "technology.html" }
                 "/terms.html" { Send-StaticFile $Context "terms.html" }
                 "/cat-background.jpg" { Send-StaticFile $Context "cat-background.jpg" }

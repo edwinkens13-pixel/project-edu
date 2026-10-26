@@ -95,10 +95,10 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="home.html">PROJECTEDU · TECH STUDIO</a>
+    <a class="brand" href="index.html">PROJECTEDU · TECH STUDIO</a>
     <nav class="nav-links" aria-label="Main navigation">
-      <a href="home.html">Home</a>
-      <a href="index.html">Letter writer</a>
+      <a href="index.html">Home</a>
+      <a href="letter.html">Letter writer</a>
       <a href="terms.html">Terms</a>
     </nav>
   </header>
@@ -109,7 +109,7 @@
       <p>Explore how structure, style, interaction, version control, backend services, databases, security, and deployment fit together. This is a learning guide—not a claim that every technology shown is already running this site.</p>
       <div class="hero-actions">
         <a class="button button-primary" href="#stack">Explore the stack ↓</a>
-        <a class="button" href="index.html">Open PROJECTEDU</a>
+        <a class="button" href="letter.html">Open PROJECTEDU</a>
       </div>
     </section>
 
@@ -117,7 +117,7 @@
       <span class="note-icon" aria-hidden="true">ℹ️</span>
       <div>
         <strong>What this website uses today</strong>
-        <p>The existing letter writer is built with HTML, CSS, and browser JavaScript, served locally by a PowerShell server. The optional AI features use a server-side OpenAI proxy. Drafts are browser-local and shareable conversations travel in links. React, GitHub, and a database below are learning concepts and a suggested growth path—not currently integrated into this workspace.</p>
+        <p>The letter writer is built with HTML, CSS, and browser JavaScript and is published on GitHub Pages. Drafts are browser-local and shareable conversations travel in links. The optional AI features use a PowerShell server-side OpenAI proxy when running locally; GitHub Pages cannot run that backend. React and a database are learning concepts and a suggested growth path, while this project uses GitHub for source control and static hosting.</p>
       </div>
     </aside>
 
@@ -158,12 +158,12 @@
           <details><summary>How it fits</summary><p>React is not loaded by the current site. For a rebuild, use React with TypeScript, Vite, accessible components, tested forms, and a small set of clearly owned state.</p></details>
         </article>
         <article class="stack-card" data-category="workflow">
-          <div class="card-top"><span class="card-icon" aria-hidden="true">⑂</span><span class="tag">Workflow concept</span></div>
+          <div class="card-top"><span class="card-icon" aria-hidden="true">⑂</span><span class="tag tag-live">In use today</span></div>
           <h3>Git</h3><p class="role">Track and safely evolve code</p><p>Commits record coherent changes; branches make it safer to experiment and review before merging.</p>
-          <details><summary>How it fits</summary><p>Use focused commits, review diffs, keep secrets out of history, and avoid force-pushing shared work. This workspace is not currently initialized as a Git repository.</p></details>
+          <details><summary>How it fits</summary><p>This project uses Git for version history. Use focused commits, review diffs, keep secrets out of history, and avoid force-pushing shared work.</p></details>
         </article>
         <article class="stack-card" data-category="workflow">
-          <div class="card-top"><span class="card-icon" aria-hidden="true">◉</span><span class="tag">Workflow concept</span></div>
+          <div class="card-top"><span class="card-icon" aria-hidden="true">◉</span><span class="tag tag-live">In use today</span></div>
           <h3>GitHub</h3><p class="role">Collaborate and automate</p><p>Host a repository, review pull requests, track work, and run automated checks with GitHub Actions.</p>
           <details><summary>How it fits</summary><p>Protect the main branch, require checks and review for changes, use Dependabot or equivalent dependency monitoring, and keep deployment secrets in a secret store—not in source files.</p></details>
         </article>
@@ -239,13 +239,10 @@
         <section class="demo-panel" aria-label="Git command example">
           <h3>Track a focused change</h3>
           <p>Example commands for a local project you own. Review the changes before committing.</p>
-          <div class="code-block"><button class="copy-button" type="button" data-copy="git init&#10;git status&#10;git add home.html index.html technology.html terms.html README.md server.ps1 cat-background.jpg&#10;git commit -m &quot;Build technology showcase&quot;&#10;git branch -M main&#10;git remote add origin YOUR_REPOSITORY_URL&#10;git push -u origin main">Copy</button><pre><code>git init
-git status
-git add home.html index.html technology.html terms.html README.md server.ps1 cat-background.jpg
-git commit -m "Build technology showcase"
-git branch -M main
-git remote add origin YOUR_REPOSITORY_URL
-git push -u origin main</code></pre></div>
+          <div class="code-block"><button class="copy-button" type="button" data-copy="git status&#10;git add index.html letter.html home.html technology.html terms.html README.md server.ps1 cat-background.jpg&#10;git commit -m &quot;Update website&quot;&#10;git push origin main">Copy</button><pre><code>git status
+git add index.html letter.html home.html technology.html terms.html README.md server.ps1 cat-background.jpg
+git commit -m "Update website"
+git push origin main</code></pre></div>
           <p class="demo-status">Review <code>git status</code> and scan staged files for secrets before committing. Never add API keys or credentials.</p>
           <p class="demo-status copy-status" aria-live="polite"></p>
         </section>
@@ -279,8 +276,8 @@ git push -u origin main</code></pre></div>
   </main>
   <footer>
     <span>PROJECTEDU learning studio</span>
-    <a href="home.html">Home</a>
-    <a href="index.html">Letter writer</a>
+    <a href="index.html">Home</a>
+    <a href="letter.html">Letter writer</a>
     <a href="terms.html">Terms &amp; Conditions</a>
   </footer>
   <script>
